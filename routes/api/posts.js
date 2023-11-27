@@ -7,6 +7,12 @@ const Post = require('../../models/Post');
 const User = require('../../models/User');
 const Profile = require('../../models/Profile');
 const checkObjectId = require('../../middleware/checkObjectId');
+//const redisClient = require('../../server');
+const { createClient } = require('redis');
+const redisClient = createClient({
+  url: 'redis://localhost:6379' // Replace with your Redis server's URL
+});
+redisClient.connect().catch(console.error);
 
 // @route    POST api/posts
 // @desc     Create a post
@@ -59,24 +65,35 @@ router.post(
  *         description: Server error.
  */
 router.get('/', auth, async (req, res) => {
-  try {
-    const user = await Profile.find({"user" : req.user.id});
-    const followingUser = user[0].following;
-    const posts = await Post.find().sort({ date: -1 });
-    
-    // Extract user IDs from the FollowingUser array
-    const followingUserIds = followingUser.map(fu => fu.user);
+    const redisKey = `posts-user-${req.user.id}`; // Unique Redis key for each user's posts
 
-    // Filter the Posts array to include only those posts where the `user` field
-    // matches one of the user IDs in the followingUserIds array
-    const filteredPosts = posts.filter(post => followingUserIds.includes(post.user))
-    
-    res.json(filteredPosts);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
-  }
+    try {
+        // Try to get cached posts from Redis
+        const cachedPosts = await redisClient.get(redisKey);
+        if (cachedPosts) {
+            // If posts are in the cache, parse and return them
+            return res.json(JSON.parse(cachedPosts));
+        } else {
+            // If not in cache, fetch from database
+            const user = await Profile.find({"user" : req.user.id});
+            const followingUser = user[0].following;
+            const posts = await Post.find().sort({ date: -1 });
+            
+            // Filter posts as before
+            const followingUserIds = followingUser.map(fu => fu.user);
+            const filteredPosts = posts.filter(post => followingUserIds.includes(post.user));
+
+            // Cache the posts in Redis with a TTL (e.g., 1 hour = 3600 seconds)
+            await redisClient.setEx(redisKey, 3600, JSON.stringify(posts));
+
+            res.json(filteredPosts);
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
 });
+
 
 // @route    GET api/posts/:id
 // @desc     Get postsbyid

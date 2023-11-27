@@ -27,9 +27,6 @@ const Navbar = ({ auth, logout }) => {
             </Link>
           </li>
           <li>
-            <Link to="/messages">Inbox</Link>
-          </li>
-          <li>
             <a onClick={logout} href="/login">
               <i className="fas fa-sign-out-alt" />{' '}
               <span className="hide-sm">Logout</span>

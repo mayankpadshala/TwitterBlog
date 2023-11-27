@@ -5,11 +5,22 @@ const cookieParser = require('cookie-parser');
 const ws = require('ws');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger');
+const redis = require('redis');
 
 const app = express();
 
 // Connect Database
 connectDB();
+
+const redisClient = redis.createClient({
+    host: 'localhost', // or your Redis server host
+    port: 6379 // default Redis port
+});
+
+redisClient.on('error', (err) => console.log('Redis Client Error', err));
+
+redisClient.connect();
+
 
 // Init Middleware
 app.use(express.json());

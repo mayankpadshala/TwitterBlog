@@ -8,7 +8,6 @@ import Alert from './components/layout/Alert';
 import ProfileForm from './components/profile-forms/ProfileForm';
 import Profiles from './components/profiles/Profiles';
 import Profile from './components/profile/Profile';
-import Message from './components/chat/Chat';
 import Posts from './components/posts/Posts';
 import Post from './components/post/Post';
 import NotFound from './components/layout/NotFound';
@@ -51,7 +50,6 @@ const App = () => {
           <Route path="login" element={<Login />} />
           <Route path="profiles" element={<Profiles />} />
           <Route path="profile/:id" element={<Profile />} />
-          <Route path="message/:id" element={<Message />} />
           <Route
             path="create-profile"
             element={<PrivateRoute component={ProfileForm} />}
