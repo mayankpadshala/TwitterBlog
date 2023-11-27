@@ -3,6 +3,9 @@ const connectDB = require('./config/db');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const ws = require('ws');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger');
+
 const app = express();
 
 // Connect Database
@@ -19,6 +22,8 @@ app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/profile', require('./routes/api/profile'));
 app.use('/api/posts', require('./routes/api/posts'));
 app.use('/api/messages', require('./routes/api/messages'));
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument)); 
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {

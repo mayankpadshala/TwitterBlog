@@ -26,6 +26,32 @@ router.get('/', auth, async (req, res) => {
 // @route    POST api/auth
 // @desc     Authenticate user & get token
 // @access   Public
+/**
+ * @swagger
+ * /auth:
+ *   post:
+ *     summary: User login
+ *     description: This route logs in a user.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: User logged in successfully.
+ *       400:
+ *         description: Bad request.
+ */
 router.post(
   '/',
   check('email', 'Please include a valid email').isEmail(),

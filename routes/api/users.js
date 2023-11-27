@@ -13,6 +13,44 @@ const Profile = require('../../models/Profile');
 // @route    POST api/users
 // @desc     Register user
 // @access   Public
+/**
+ * @swagger
+ * /users:
+ *   post:
+ *     summary: Register user
+ *     description: Register a new user in the application.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - email
+ *               - password
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               password:
+ *                 type: string
+ *                 format: password
+ *     responses:
+ *       200:
+ *         description: User registered successfully and profile created.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *       400:
+ *         description: Invalid input or user already exists.
+ */
 router.post(
   '/',
   check('name', 'Name is required').notEmpty(),

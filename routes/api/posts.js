@@ -44,6 +44,20 @@ router.post(
 // @route    GET api/posts
 // @desc     Get all posts
 // @access   Private
+/**
+ * @swagger
+ * /posts:
+ *   get:
+ *     security:
+ *       - BearerAuth: []
+ *     summary: Get posts
+ *     description: Retrieve the posts of the current logged-in user's following user.
+ *     responses:
+ *       200:
+ *         description: posts
+ *       500:
+ *         description: Server error.
+ */
 router.get('/', auth, async (req, res) => {
   try {
     const user = await Profile.find({"user" : req.user.id});
@@ -67,6 +81,29 @@ router.get('/', auth, async (req, res) => {
 // @route    GET api/posts/:id
 // @desc     Get postsbyid
 // @access   Private
+/**
+ * @swagger
+ * /posts/{id}:
+ *   get:
+ *     security:
+ *       - BearerAuth: []
+ *     summary: Get posts of user
+ *     description: Retrieve a user's posts.
+ *     parameters:
+ *       - in: path
+ *         name: user_id
+ *         required: true
+ *         description: Unique ID of the user.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: posts of the user.
+ *       400:
+ *         description: posts not found.
+ *       500:
+ *         description: Server error.
+ */
 router.get('/:id', auth, async (req, res) => {
   try {
     const posts = await Post.find({"user" : req.user.id}).sort({ date: -1 });
@@ -81,6 +118,29 @@ router.get('/:id', auth, async (req, res) => {
 // @route    GET api/posts/:id
 // @desc     Get post by ID
 // @access   Private
+/**
+ * @swagger
+ * /posts/{id}:
+ *   get:
+ *     security:
+ *       - BearerAuth: []
+ *     summary: Get posts by id
+ *     description: Retrieve a user's posts by ID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Unique ID of the post.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: posts by id.
+ *       400:
+ *         description: posts not found.
+ *       500:
+ *         description: Server error.
+ */
 router.get('/:id', auth, checkObjectId('id'), async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
@@ -100,6 +160,27 @@ router.get('/:id', auth, checkObjectId('id'), async (req, res) => {
 // @route    DELETE api/posts/:id
 // @desc     Delete a post
 // @access   Private
+/**
+ * @swagger
+ * /posts/{id}:
+ *   delete:
+ *     security:
+ *       - BearerAuth: []
+ *     summary: delete post by id
+ *     description: delete the post by id.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Unique ID of the post.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: post deleted.
+ *       500:
+ *         description: Server error.
+ */
 router.delete('/:id', [auth, checkObjectId('id')], async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
