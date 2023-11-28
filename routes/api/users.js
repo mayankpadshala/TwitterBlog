@@ -4,6 +4,7 @@ const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
+const { logger } = require('../../logger');
 const { check, validationResult } = require('express-validator');
 const normalize = require('normalize-url');
 
@@ -106,7 +107,8 @@ router.post(
 
       // build a profile
       const profileFields = {
-        user: user.id
+        user: user.id,
+        status: "Active"
       };
       try {
         // Using upsert option (creates new doc if no match is found):
@@ -127,12 +129,13 @@ router.post(
         { expiresIn: '5 days' },
         (err, token) => {
           if (err) throw err;
-          
-          res.json({ token });
+          logger.info('post user');
+          res.json({ token , user});
         }
       );
     } catch (err) {
       console.error(err.message);
+      logger.error('post user-err'+err.message);
       res.status(500).send('Server error');
     }
   }

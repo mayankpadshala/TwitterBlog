@@ -5,6 +5,7 @@ const auth = require('../../middleware/auth');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const { check, validationResult } = require('express-validator');
+const { logger } = require('../../logger');
 
 const User = require('../../models/User');
 const passport = require('passport');
@@ -16,9 +17,11 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 router.get('/', auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
+    logger.info('get auth');
     res.json(user);
   } catch (err) {
     console.error(err.message);
+    logger.error('get auth'+err.message);
     res.status(500).send('Server Error');
   }
 });
@@ -93,11 +96,13 @@ router.post(
         { expiresIn: '5 days' },
         (err, token) => {
           if (err) throw err;
+          logger.info('post auth');
           res.json({ token , user});
         }
       );
     } catch (err) {
       console.error(err.message);
+      logger.error('auth error'+err.message);
       res.status(500).send('Server error');
     }
   }

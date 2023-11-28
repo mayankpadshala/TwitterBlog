@@ -15,10 +15,10 @@ const Navbar = ({ auth, logout }) => {
       <Fragment>{auth.isAuthenticated ? (
         <ul>
           <li>
-            <Link to="/profiles">People</Link>
+            <Link to="/posts">Posts</Link>
           </li>
           <li>
-            <Link to="/posts">Posts</Link>
+            <Link to="/profiles">People</Link>
           </li>
           <li>
             <Link to={`/profile/${auth.user._id}`}>

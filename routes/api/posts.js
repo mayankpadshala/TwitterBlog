@@ -2,12 +2,11 @@ const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const auth = require('../../middleware/auth');
-
+const { logger } = require('../../logger');
 const Post = require('../../models/Post');
 const User = require('../../models/User');
 const Profile = require('../../models/Profile');
 const checkObjectId = require('../../middleware/checkObjectId');
-//const redisClient = require('../../server');
 const { createClient } = require('redis');
 const redisClient = createClient({
   url: 'redis://localhost:6379' // Replace with your Redis server's URL
@@ -26,7 +25,7 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-
+    const redisKey = `posts-user-${req.user.id}`
     try {
       const user = await User.findById(req.user.id).select('-password');
 
@@ -38,10 +37,14 @@ router.post(
       });
 
       const post = await newPost.save();
-
+      redisClient.setEx(redisKey, 300, JSON.stringify(newPost)).catch(err => {
+        console.error('Error caching posts in Redis:', err);
+    });
+      logger.info('post posts');
       res.json(post);
     } catch (err) {
       console.error(err.message);
+      logger.error('post posts-error'+err.message);
       res.status(500).send('Server Error');
     }
   }
@@ -64,8 +67,9 @@ router.post(
  *       500:
  *         description: Server error.
  */
+
 router.get('/', auth, async (req, res) => {
-    const redisKey = `posts-user-${req.user.id}`; // Unique Redis key for each user's posts
+  const redisKey = `posts-user-${req.user.id}`; // Unique Redis key for each user's posts
 
     try {
         // Try to get cached posts from Redis
@@ -124,10 +128,11 @@ router.get('/', auth, async (req, res) => {
 router.get('/:id', auth, async (req, res) => {
   try {
     const posts = await Post.find({"user" : req.user.id}).sort({ date: -1 });
-    
+    logger.info('get posts');
     res.json(posts);
   } catch (err) {
     console.error(err.message);
+    logger.error('get posts By id-error'+err.message);
     res.status(500).send('Server Error');
   }
 });
@@ -163,13 +168,14 @@ router.get('/:id', auth, checkObjectId('id'), async (req, res) => {
     const post = await Post.findById(req.params.id);
 
     if (!post) {
+      logger.info('post not found');
       return res.status(404).json({ msg: 'Post not found' });
     }
-
+    logger.info('get post by id');
     res.json(post);
   } catch (err) {
     console.error(err.message);
-
+    logger.error('get posts by id-error'+err.message);
     res.status(500).send('Server Error');
   }
 });
@@ -212,11 +218,11 @@ router.delete('/:id', [auth, checkObjectId('id')], async (req, res) => {
     }
 
     await post.remove();
-
+    logger.info('delete post');
     res.json({ msg: 'Post removed' });
   } catch (err) {
     console.error(err.message);
-
+    logger.error('delete post-err'+err.message);
     res.status(500).send('Server Error');
   }
 });
@@ -236,10 +242,11 @@ router.put('/like/:id', auth, checkObjectId('id'), async (req, res) => {
     post.likes.unshift({ user: req.user.id });
 
     await post.save();
-
+    logger.info('put like');
     return res.json(post.likes);
   } catch (err) {
     console.error(err.message);
+    logger.error('put like-err'+err.message);
     res.status(500).send('Server Error');
   }
 });
@@ -262,10 +269,11 @@ router.put('/unlike/:id', auth, checkObjectId('id'), async (req, res) => {
     );
 
     await post.save();
-
+    logger.info('put unlike');
     return res.json(post.likes);
   } catch (err) {
     console.error(err.message);
+    logger.error('put unlike-err'+err.message);
     res.status(500).send('Server Error');
   }
 });
@@ -298,10 +306,11 @@ router.post(
       post.comments.unshift(newComment);
 
       await post.save();
-
+      logger.info('post comment');
       res.json(post.comments);
     } catch (err) {
       console.error(err.message);
+      logger.error('post comment-err'+err.message);
       res.status(500).send('Server Error');
     }
   }
@@ -332,10 +341,11 @@ router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
     );
 
     await post.save();
-
+    logger.info('delete comment');
     return res.json(post.comments);
   } catch (err) {
     console.error(err.message);
+    logger.error('delete comment-err'+err.message);
     return res.status(500).send('Server Error');
   }
 });

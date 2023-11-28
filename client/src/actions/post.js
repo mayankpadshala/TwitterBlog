@@ -22,7 +22,7 @@ import {
 export const getPosts = () => async (dispatch) => {
   try {
     const res = await api.get('/posts');
-
+    console.log((res))
     dispatch({
       type: GET_POSTS,
       payload: res.data
