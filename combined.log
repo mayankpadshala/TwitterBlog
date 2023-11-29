@@ -532,3 +532,50 @@
 {"level":"info","message":"post profile"}
 {"level":"info","message":"get posts"}
 {"level":"info","message":"get profile by id"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"post user"}
+{"level":"info","message":"get auth"}
+{"level":"info","message":"get profile"}
+{"level":"info","message":"get profile by id"}
+{"level":"info","message":"get posts"}
+{"level":"info","message":"get posts"}
+{"level":"info","message":"get profile by id"}
+{"level":"info","message":"get profile"}
+{"level":"info","message":"get profile by id"}
+{"level":"info","message":"get posts"}
+{"level":"info","message":"follow user"}
+{"level":"info","message":"get profile"}
+{"level":"info","message":"get profile by id"}
+{"level":"info","message":"get posts"}
+{"level":"info","message":"get profile"}
+{"level":"info","message":"get profile by id"}
+{"level":"info","message":"get posts"}
+{"level":"info","message":"get profile"}
+{"level":"info","message":"get profile by id"}
+{"level":"info","message":"get posts"}
+{"level":"info","message":"get profile"}
+{"level":"info","message":"get profile by id"}
+{"level":"info","message":"get posts"}
+{"level":"info","message":"get profile"}
+{"level":"info","message":"get profile"}
+{"level":"info","message":"get profile by id"}
+{"level":"info","message":"get posts"}
+{"level":"info","message":"post posts"}
+{"level":"info","message":"get profile"}
+{"level":"info","message":"get profile by id"}
+{"level":"info","message":"get posts"}
+{"level":"info","message":"unfollow user"}
+{"level":"info","message":"get profile by id"}
+{"level":"info","message":"get auth"}
+{"level":"info","message":"get posts"}
+{"level":"info","message":"get profile"}
+{"level":"info","message":"get auth"}
+{"level":"info","message":"get profile"}
+{"level":"info","message":"post auth"}
+{"level":"info","message":"get auth"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"GET /api/auth 500 2326 - 3.439 ms"}
+{"level":"info","message":"GET /auth/google 500 2326 - 0.732 ms"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"GET /api/auth 500 2326 - 4.581 ms"}
+{"level":"info","message":"GET /auth/google 500 2326 - 0.813 ms"}
