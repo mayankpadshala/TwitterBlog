@@ -3,3 +3,6 @@ config/production.json
 config/default.json
 client/build
 client/.eslintcache
+combined.log
+error.log
+

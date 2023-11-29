@@ -94,7 +94,27 @@ export const createProfile =
   async (dispatch) => {
     try {
       const res = await api.post('/profile', formData);
+      
+      // if(formData.image.name){
+      //   const config = {
+      //     headers: {
+      //       'Content-Type': 'multipart/form-data'
+      //     }
+      //   };
+      //   let fd = new FormData();
+      //   fd.append('image',formData.image);
+      //   const response = await api.post('/upload', fd, config);
+        
+      //   res.data.image = response;
+      //   let base64String = await btoa(String.fromCharCode.apply(null, new Uint8Array(response.data)));
 
+      //   // Create the data URL
+      //   let dataUrl = 'data:image/jpeg;base64,' + response.data;
+      
+      //   res.data.src = dataUrl
+      // }
+      
+      // console.log(res.data)
       dispatch({
         type: GET_PROFILE,
         payload: res.data

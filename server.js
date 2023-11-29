@@ -34,6 +34,7 @@ app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/profile', require('./routes/api/profile'));
 app.use('/api/posts', require('./routes/api/posts'));
 app.use('/api/messages', require('./routes/api/messages'));
+app.use('/api/upload', require('./routes/api/upload'));
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument)); 
 app.use(morganMiddleware);

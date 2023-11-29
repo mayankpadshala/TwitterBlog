@@ -85,7 +85,6 @@ router.post(
   '/',
   auth,
   check('status', 'Status is required').notEmpty(),
-  check('skills', 'Skills is required').notEmpty(),
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -273,6 +272,7 @@ router.put('/follow/:id', auth, checkObjectId('id'), async (req, res) => {
 
     await profile.save();
     await userid[0].save();
+
     logger.info('follow user');
     return res.json(profile);
   } catch (err) {

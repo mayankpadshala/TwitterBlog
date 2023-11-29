@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 const ProfileTop = ({
   profile: {
-    bio,
+    bio, 
     location,
     website,
     social,

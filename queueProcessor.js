@@ -2,6 +2,7 @@
 
 const Queue = require('bull');
 const { createClient } = require('redis');
+const { logger } = require('./logger');
 const redisClient = createClient({
     url: 'redis://localhost:6379' // Replace with your Redis server's URL
   });

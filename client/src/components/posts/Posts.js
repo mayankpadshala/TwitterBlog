@@ -7,15 +7,16 @@ import { getPosts } from '../../actions/post';
 
 const Posts = ({ getPosts, post: { posts } }) => {
   useEffect(() => {
-    getPosts();
+    getPosts(); 
   }, [getPosts]);
-
+  
   return (
     <section className="container">
       <h1 className="large text-primary">Posts</h1>
       <p className="lead">
         <i className="fas fa-user" /> Welcome to the MicroBlab
       </p>
+      
       <PostForm />
       <div className="posts">
         {posts.length > 0 ? (posts.map((post) => (

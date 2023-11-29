@@ -18,9 +18,9 @@ const ProfileSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  skills: {
-    type: [String],
-    required: false
+  imageId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'image'
   },
   bio: {
     type: String

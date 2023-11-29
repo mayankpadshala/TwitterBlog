@@ -6,3 +6,17 @@
 {"level":"error","message":"get posts-errorCannot read properties of undefined (reading 'id')"}
 {"level":"error","message":"get posts-errorProfileOne is not defined"}
 {"level":"error","message":"get posts-errorProfileOne is not defined"}
+{"level":"error","message":"post image-error Cannot read properties of undefined (reading 'buffer')"}
+{"level":"error","message":"post image-error Cannot read properties of undefined (reading 'buffer')"}
+{"level":"error","message":"post image-error Cannot read properties of undefined (reading 'buffer')"}
+{"level":"error","message":"post image-error Cannot read properties of undefined (reading 'buffer')"}
+{"level":"error","message":"post image-error Cannot read properties of undefined (reading 'buffer')"}
+{"level":"error","message":"post image-error Cannot read properties of undefined (reading 'buffer')"}
+{"level":"error","message":"post image-error Cannot read properties of undefined (reading 'buffer')"}
+{"level":"error","message":"post image-error Cannot read properties of undefined (reading 'buffer')"}
+{"level":"error","message":"post image-error Cannot read properties of undefined (reading 'buffer')"}
+{"level":"error","message":"post image-error Cannot read properties of undefined (reading 'buffer')"}
+{"level":"error","message":"post image-error Cannot read properties of undefined (reading 'buffer')"}
+{"level":"error","message":"post image-error Cannot read properties of undefined (reading 'buffer')"}
+{"level":"error","message":"post profile-errCast to ObjectId failed for value \"{ id: '65653443878ebd574c279446', avatar: '' }\" (type Object) at path \"user\" for model \"profile\""}
+{"level":"error","message":"post image-error Cannot read properties of undefined (reading 'buffer')"}

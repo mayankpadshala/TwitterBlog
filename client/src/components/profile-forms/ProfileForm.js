@@ -21,7 +21,7 @@ const initialState = {
   facebook: '',
   linkedin: '',
   youtube: '',
-  instagram: ''
+  instagram: '', image: Image
 };
 
 const ProfileForm = ({
@@ -63,18 +63,26 @@ const ProfileForm = ({
     facebook,
     linkedin,
     youtube,
-    instagram
+    instagram, 
   } = formData;
 
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      formData.image = e.target.files[0];
+    }
+  };
+  
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const onSubmit = (e) => {
     const editing = profile ? true : false;
     e.preventDefault();
+    
     createProfile(formData, editing).then(() => {
       if (!editing) navigate(`/profile/${auth.user._id}`);
     });
+    
     navigate(`/profile/${auth.user._id}`);
   };
 
@@ -91,7 +99,11 @@ const ProfileForm = ({
       </p>
       <small></small>
       <form className="form" onSubmit={onSubmit}>
-      <div className="form-group">
+      {/* <div className="form-group">
+          <input type="file" name='image' onChange={handleImageChange}/>
+          <small className="form-text">Upload your photo</small>
+        </div> */}
+        <div className="form-group">
           <textarea
             placeholder="A short bio of yourself"
             name="bio"
