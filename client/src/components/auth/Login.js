@@ -99,12 +99,12 @@ export default function LoginPage() {
                     <p>Login With Google</p>
                 </div>
 
-                <div className=".googleContainer .githubContainer" onClick={githubLogin}>
+                <div className="githubContainer" onClick={githubLogin}>
                     <img src={githubImage} alt="Github Icon" />
                     <p>Login With Github</p>
                 </div>
 
-                <div className=".googleContainer .twitterContainer" onClick={twitterLogin}>
+                <div className="twitterContainer" onClick={twitterLogin}>
                     <img src={twitterImage} alt="Twitter Icon" />
                     <p>Login With Twitter</p>
                 </div>

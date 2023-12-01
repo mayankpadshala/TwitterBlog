@@ -579,3 +579,46 @@
 {"level":"info","message":"Server running on port 5000"}
 {"level":"info","message":"GET /api/auth 500 2326 - 4.581 ms"}
 {"level":"info","message":"GET /auth/google 500 2326 - 0.813 ms"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"GET /api/auth 404 147 - 24.343 ms"}
+{"level":"info","message":"GET /auth/google 302 0 - 3.016 ms"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"GET /api/auth 404 147 - 18.875 ms"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"GET /api/auth 404 147 - 12.244 ms"}
+{"level":"info","message":"GET /auth/github 302 0 - 4.721 ms"}
+{"level":"info","message":"GET /auth/twitter 500 1175 - 152.202 ms"}
+{"level":"info","message":"GET /api/auth 404 147 - 2.413 ms"}
+{"level":"info","message":"GET /auth/google 302 0 - 2.604 ms"}
+{"level":"info","message":"GET /auth/twitter 500 1175 - 150.697 ms"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"GET /api/auth 404 147 - 17.419 ms"}
+{"level":"info","message":"GET /auth/twitter 500 1175 - 123.297 ms"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"GET /api/auth 404 147 - 16.654 ms"}
+{"level":"info","message":"GET /auth/twitter 500 1175 - 119.328 ms"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"GET /api/auth 404 147 - 16.291 ms"}
+{"level":"info","message":"GET /api/auth 404 147 - 4.188 ms"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"GET /api/auth 404 147 - 19.537 ms"}
+{"level":"info","message":"GET /auth/twitter 302 0 - 218.942 ms"}
+{"level":"info","message":"GET /auth/twitter 302 0 - 281.230 ms"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"GET /api/auth 404 147 - 5.533 ms"}
+{"level":"info","message":"GET /api/auth 404 147 - 0.861 ms"}
+{"level":"info","message":"GET /auth/github 302 0 - 2.343 ms"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"GET /api/auth 404 147 - 5.886 ms"}
+{"level":"info","message":"GET /api/auth 404 147 - 1.002 ms"}
+{"level":"info","message":"GET /api/auth 404 147 - 0.414 ms"}
+{"level":"info","message":"GET /api/auth 404 147 - 0.301 ms"}
+{"level":"info","message":"GET /auth/twitter 302 0 - 276.274 ms"}
+{"level":"info","message":"GET /auth/github 302 0 - 0.859 ms"}
+{"level":"info","message":"GET /api/auth 404 147 - 0.466 ms"}
+{"level":"info","message":"get profile"}
+{"level":"info","message":"GET /api/auth 404 147 - 0.441 ms"}
+{"level":"info","message":"get profile"}
+{"level":"info","message":"get profile"}
+{"level":"info","message":"GET /api/auth 404 147 - 0.541 ms"}
+{"level":"info","message":"Server running on port 5000"}
