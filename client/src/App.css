@@ -216,6 +216,7 @@ img {
 
 .round-img {
   border-radius: 50%;
+  width: 130px;
 }
 
 .line {
@@ -352,7 +353,7 @@ button {
 /* Profiles Page */
 .profile {
   display: grid;
-  grid-template-columns: 2fr 4fr 2fr;
+  grid-template-columns: 1fr 4fr 2fr;
   align-items: center;
   grid-gap: 2rem;
   padding: 1rem;
@@ -382,7 +383,7 @@ button {
 }
 
 .profile-top img {
-  width: 250px;
+  width: 130px;
 }
 
 .profile-top .icons a {
@@ -685,21 +686,12 @@ button {
 } */
 
 .loginPage {
-    width: 100vw;
     display: flex;
     align-items: center;
     flex-direction: column;
     justify-content: center;
 }
 
-.loginForm {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    max-width: 600px;
-    flex-direction: column;
-    min-width: 40vw;
-}
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;1,100;1,200;1,300&display=swap');
 h1,

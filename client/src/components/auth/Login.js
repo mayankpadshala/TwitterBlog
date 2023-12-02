@@ -75,7 +75,6 @@ const twitterLogin = () => {
 
       <div className="loginPage">
             <div className="loginForm">
-                <h1>Login</h1>
                 <div className="googleContainer" onClick={googleLogin}>
                     <img src={googleImage} alt="Google Icon" />
                     <p>Login With Google</p>

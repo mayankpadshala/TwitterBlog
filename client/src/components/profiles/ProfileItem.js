@@ -22,9 +22,7 @@ const ProfileItem = ({
           {bio} 
         </p>
         <p className='my-1'>{location && <span>{location}</span>}</p>
-        <Link to={`/profile/${_id}`} className='btn btn-primary'>
-          View Profile
-        </Link>
+        
          {/* {auth.isAuthenticated &&
               auth.loading === false &&
               auth.user._id !== _id && followers.length > 0 && followers.find(i => i.user === auth.user._id) && (
@@ -48,6 +46,10 @@ const ProfileItem = ({
                   </button>
               )} */}
             </div>
+            <ul><Link to={`/profile/${_id}`} className='btn btn-primary'>
+                View Profile
+              </Link>
+            </ul>
     </div>
   );
 };
