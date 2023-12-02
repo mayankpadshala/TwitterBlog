@@ -8,12 +8,11 @@ const UserSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: true,
-    unique: true
+    required: false
   },
   password: {
     type: String,
-    required: true
+    required: false
   },
   avatar: {
     type: String
@@ -21,7 +20,51 @@ const UserSchema = new mongoose.Schema({
   date: {
     type: Date,
     default: Date.now
-  }
+  },
+  googleId: {
+    type: String,
+    unique: true
+  },
+  website: {
+    type: String
+  },
+  location: {
+    type: String
+  },
+  bio: {
+    type: String
+  },
+  social: {
+    youtube: {
+      type: String
+    },
+    twitter: {
+      type: String
+    },
+    facebook: {
+      type: String
+    },
+    linkedin: {
+      type: String
+    },
+    instagram: {
+      type: String
+    }
+  },
+  followers: [
+    {
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+      }
+    }
+  ],
+  following: [
+    {
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+      }
+    }
+  ],
 });
 
 module.exports = mongoose.model('user', UserSchema);

@@ -12,7 +12,7 @@ const Profile = ({ getProfileById, profile: { profile }, auth , addFollower, UnF
   useEffect(() => {
     getProfileById(id);
   }, [getProfileById, id]);
-
+  console.log("pro==>"+JSON.stringify(profile));
   return (
     <section className="container">
       {profile === null ? (
@@ -21,7 +21,7 @@ const Profile = ({ getProfileById, profile: { profile }, auth , addFollower, UnF
         <Fragment>
           {auth.isAuthenticated &&
             auth.loading === false &&
-            auth.user._id === profile.user._id && (
+            auth.user._id === profile._id && (
               <Link to="/edit-profile" className="btn btn-dark">
                 Edit Profile
               </Link>
@@ -31,7 +31,7 @@ const Profile = ({ getProfileById, profile: { profile }, auth , addFollower, UnF
             <div className="profile-follow bg-primary">
             {auth.isAuthenticated &&
               auth.loading === false &&
-              auth.user._id !== profile.user._id && profile.followers.length > 0 && profile.followers.find(i => i.user === auth.user._id) && (
+              auth.user._id !== profile._id && profile.followers.length > 0 && profile.followers.find(i => i.user === auth.user._id) && (
                 <button
                     onClick={() => UnFollow(profile._id)}
                     type="button"
@@ -43,7 +43,7 @@ const Profile = ({ getProfileById, profile: { profile }, auth , addFollower, UnF
               )}
               {auth.isAuthenticated &&
               auth.loading === false &&
-              auth.user._id !== profile.user._id && (!profile.followers.length || !profile.followers.find(i => i.user === auth.user._id)) &&  (
+              auth.user._id !== profile._id && (!profile.followers.length || !profile.followers.find(i => i.user === auth.user._id)) &&  (
                 <button
                     onClick={() => addFollower(profile._id)}
                     type="button"

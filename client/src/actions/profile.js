@@ -22,8 +22,8 @@ import {
 // Get current users profile
 export const getCurrentProfile = () => async (dispatch) => {
   try {
-    const res = await api.get('/profile/me');
-
+    const res = await api.get('/users/me');
+    console.log(res.data)
     dispatch({
       type: GET_PROFILE,
       payload: res.data
@@ -41,7 +41,7 @@ export const getProfiles = () => async (dispatch) => {
   dispatch({ type: CLEAR_PROFILE });
 
   try {
-    const res = await api.get('/profile');
+    const res = await api.get('/users');
 
     dispatch({
       type: GET_PROFILES,
@@ -58,7 +58,7 @@ export const getProfiles = () => async (dispatch) => {
 // Get profile by ID
 export const getProfileById = (userId) => async (dispatch) => {
   try {
-    const res = await api.get(`/profile/user/${userId}`);
+    const res = await api.get(`/users/user/${userId}`);
 
     dispatch({
       type: GET_PROFILE,
@@ -93,7 +93,7 @@ export const createProfile =
   (formData, edit = false) =>
   async (dispatch) => {
     try {
-      const res = await api.post('/profile', formData);
+      const res = await api.post('/users/profile', formData);
       
       // if(formData.image.name){
       //   const config = {
@@ -114,7 +114,7 @@ export const createProfile =
       //   res.data.src = dataUrl
       // }
       
-      // console.log(res.data)
+     console.log("res==>"+res.data)
       dispatch({
         type: GET_PROFILE,
         payload: res.data
@@ -137,31 +137,6 @@ export const createProfile =
     }
   };
 
-// Add Experience
-export const addExperience = (formData) => async (dispatch) => {
-  try {
-    const res = await api.put('/profile/experience', formData);
-
-    dispatch({
-      type: UPDATE_PROFILE,
-      payload: res.data
-    });
-
-    dispatch(setAlert('Experience Added', 'success'));
-    return res.data;
-  } catch (err) {
-    const errors = err.response.data.errors;
-
-    if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
-    }
-
-    dispatch({
-      type: PROFILE_ERROR,
-      payload: { msg: err.response.statusText, status: err.response.status }
-    });
-  }
-};
 
 // Add Education
 export const addEducation = (formData) => async (dispatch) => {
@@ -192,7 +167,7 @@ export const addEducation = (formData) => async (dispatch) => {
 // Add Fllower
 export const addFollower = (id) => async (dispatch) => {
   try {
-    const res = await api.put(`/profile/follow/${id}`);
+    const res = await api.put(`/users/follow/${id}`);
     
     dispatch({
       type: UPDATE_PROFILE,
@@ -210,7 +185,7 @@ export const addFollower = (id) => async (dispatch) => {
 // Unfollow
 export const UnFollow = (id) => async (dispatch) => {
   try {
-    const res = await api.put(`/profile/unfollow/${id}`);
+    const res = await api.put(`/users/unfollow/${id}`);
     
     dispatch({
       type: UPDATE_PROFILE,

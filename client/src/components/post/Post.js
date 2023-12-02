@@ -13,7 +13,7 @@ const Post = ({ getPost, post: { post, loading } }) => {
   useEffect(() => {
     getPost(id);
   }, [getPost, id]);
-
+  console.log("post==>"+post);
   return loading || post === null ? (
     <Spinner />
   ) : (
@@ -24,9 +24,9 @@ const Post = ({ getPost, post: { post, loading } }) => {
       <PostItem post={post} showActions={false} />
       <CommentForm postId={post._id} />
       <div className="comments">
-        {post.comments.map((comment) => (
+        {post.comments.length > 0 ? post.comments.map((comment) => (
           <CommentItem key={comment._id} comment={comment} postId={post._id} />
-        ))}
+        )) : (<p></p>)}
       </div>
     </section>
   );

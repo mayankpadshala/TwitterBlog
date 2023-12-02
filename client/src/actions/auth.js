@@ -1,4 +1,5 @@
 import api from '../utils/api';
+import axios from 'axios';
 import { setAlert } from './alert';
 import {
   REGISTER_SUCCESS,
@@ -20,12 +21,21 @@ import {
 // Load User
 export const loadUser = () => async (dispatch) => {
   try {
-    const res = await api.get('/auth');
-
-    dispatch({
-      type: USER_LOADED,
-      payload: res.data
-    });
+    //const res = await api.get('/auth');
+    axios.get("http://localhost:5000/getuser", { withCredentials: true }).then((res) => {
+             if (res.data) {
+              console.log(JSON.stringify(res.data))
+              dispatch({
+                type: USER_LOADED,
+                payload: res.data
+              });
+                //setUserObject(res.data);
+            }
+        })
+    // dispatch({
+    //   type: USER_LOADED,
+    //   payload: res.data
+    // });
   } catch (err) {
     dispatch({
       type: AUTH_ERROR

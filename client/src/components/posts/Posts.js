@@ -9,7 +9,7 @@ const Posts = ({ getPosts, post: { posts } }) => {
   useEffect(() => {
     getPosts(); 
   }, [getPosts]);
-  
+  console.log("getpost==>"+ JSON.stringify(posts));
   return (
     <section className="container">
       <h1 className="large text-primary">Posts</h1>
