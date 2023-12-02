@@ -5,14 +5,16 @@ import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
 import ProfileTop from './ProfileTop';
 import UserPost from './UserPost';
-import { getProfileById , addFollower, UnFollow } from '../../actions/profile';
+import { getProfileById , twoFAEnable, addFollower, UnFollow } from '../../actions/profile';
 
-const Profile = ({ getProfileById, profile: { profile }, auth , addFollower, UnFollow}) => {
+
+
+const Profile = ({ getProfileById,twoFAEnable, profile: { profile }, auth , addFollower, UnFollow}) => {
   const { id } = useParams();
   useEffect(() => {
     getProfileById(id);
   }, [getProfileById, id]);
-  
+
   return (
     <section className="container">
       {profile === null ? (
@@ -54,7 +56,27 @@ const Profile = ({ getProfileById, profile: { profile }, auth , addFollower, UnF
                   </button>
               )}
             </div>
-            
+            <div className="border-bottom border-dark pt-4 mb-4"></div>
+      <div id="2FABox" className="d-flex flex-column align-items-center gap-3">
+        <button id="enable2FAButton" className="btn btn-success"  onClick={() => twoFAEnable()}>
+          UPDATE/ENABLE 2FA
+        </button>
+        <div
+          id="twoFAFormHolder"
+          className="d-flex flex-column align-items-center gap-3"
+        >
+          <img id="qrImage" height="150" width="150" />
+          <form id="twoFAUpdateForm" className="d-flex flex-column gap-2">
+            <input
+              type="text"
+              name="code"
+              placeholder="2 FA Code"
+              className="form-control"
+            />
+            <button className="btn btn-primary" type="submit">SET</button>
+            </form>
+        </div>
+        </div>
           </div>
           <UserPost id={profile._id}/>
         </Fragment>
@@ -65,6 +87,7 @@ const Profile = ({ getProfileById, profile: { profile }, auth , addFollower, UnF
 
 Profile.propTypes = {
   getProfileById: PropTypes.func.isRequired,
+  twoFAEnable: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   addFollower: PropTypes.func.isRequired,
@@ -76,4 +99,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { getProfileById, addFollower, UnFollow })(Profile);
+export default connect(mapStateToProps, { getProfileById,twoFAEnable, addFollower, UnFollow })(Profile);

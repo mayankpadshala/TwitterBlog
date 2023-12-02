@@ -15,7 +15,8 @@ const config = require('./config/default.json');
 const cors = require('cors');
 const User = require('./models/User');
 const app = express();
-
+const qrcode = require("qrcode");
+const { authenticator } = require("otplib");
 // Connect Database
 connectDB();
 
@@ -192,6 +193,53 @@ app.get("/auth/logout", (req, res) => {
     res.send("done");
   }
 })
+
+// generater QR Image
+app.get("/api/qrImage", async (req, res) => {
+  try {
+    const { id } = req.cookies;
+    const user = await User.findById(req.user._id);
+    const secret = authenticator.generateSecret();
+    const uri = authenticator.keyuri(id, "2FA Tutorial", secret);
+    const image = await qrcode.toDataURL(uri);
+    user["2FA"].tempSecret = secret;
+    await user.save();
+    return res.send({
+      success: true,
+      image,
+    });
+  } catch {
+    return res.status(500).send({
+      success: false,
+    });
+  }
+});
+
+// set the 2 FA
+app.get("/set2FA", async (req, res) => {
+  try {
+    const { id } = req.cookies;
+    const { code } = req.query;
+    const user = await User.findById(req.user._id);
+    const { tempSecret } = user["2FA"];
+
+    const verified = authenticator.check(code, tempSecret);
+    if (!verified) throw false;
+
+    user["2FA"] = {
+      enabled: true,
+      secret: tempSecret,
+    };
+    await user.save();
+    return res.send({
+      success: true,
+    });
+  } catch {
+    return res.status(500).send({
+      success: false,
+    });
+  }
+});
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
