@@ -126,17 +126,17 @@ router.get('/', async (req, res) => {
  *       500:
  *         description: Server error.
  */
-// router.get('/:id', async (req, res) => {
-//   try {
-//     const posts = await Post.find({"user" : req.user._id}).sort({ date: -1 });
-//     logger.info('get posts');
-//     res.json(posts);
-//   } catch (err) {
-//     console.error(err.message);
-//     logger.error('get posts By id-error'+err.message);
-//     res.status(500).send('Server Error');
-//   }
-// });
+router.get('/user/:id', async (req, res) => {
+  try {
+    const posts = await Post.find({"user" : req.user._id}).sort({ date: -1 });
+    logger.info('get posts');
+    res.json(posts);
+  } catch (err) {
+    console.error(err.message);
+    logger.error('get posts By id-error'+err.message);
+    res.status(500).send('Server Error');
+  }
+});
 
 // @route    GET api/posts/:id
 // @desc     Get post by ID

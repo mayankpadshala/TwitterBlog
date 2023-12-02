@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import PostItem from '../posts/PostItem';
 import { getPostsById } from '../../actions/post';
 
 const Posts = ({ getPostsById, post: { posts } }) => {
+  const { id } = useParams();
   useEffect(() => {
-    getPostsById();
+    getPostsById(id);
   }, [getPostsById]);
 
   return (

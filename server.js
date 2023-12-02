@@ -11,6 +11,7 @@ const passport =require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const TwitterStrategy = require('passport-twitter').Strategy;
 const GitHubStrategy = require('passport-github').Strategy;
+const config = require('./config/default.json');
 const cors = require('cors');
 const User = require('./models/User');
 const app = express();
@@ -75,14 +76,14 @@ passport.deserializeUser((id, done) => {
 
 
 passport.use(new GoogleStrategy({
-  clientID: "your client id",
-  clientSecret: "your client secret",
+  clientID: config.GoogleClientId,
+  clientSecret: config.GoogleClientSecret,
   callbackURL: "/auth/google/callback"
 },
   function (request, accessToken, refreshToken, profile, done) {
     User.findOne({ googleId: profile.id }, async (err, doc) => {
       if (err) {
-        return cb(err, null);
+        return done(err, null);
       }
       if (!doc) {
         
@@ -101,58 +102,54 @@ passport.use(new GoogleStrategy({
   }));
 
 passport.use(new TwitterStrategy({
-  consumerKey: "your consumer key",
-  consumerSecret: "your secret key",
+  consumerKey: config.TwitterconsumerKey,
+  consumerSecret: config.TwitterconsumerSecret,
   callbackURL: "/auth/twitter/callback"
 },
-  function (_ , __ , profile, cb) {
+function (request, accessToken, refreshToken, profile, done) {
 
     User.findOne({ twitterId: profile.id }, async (err, doc) => {
 
       if (err) {
-        return cb(err, null);
+        return done(err, null);
       }
 
       if (!doc) {
         const newUser = new User({
           twitterId: profile.id,
-          username: profile.username
+          name: profile.displayName,
+          avatar: "https://www.shutterstock.com/image-vector/user-icon-trendy-flat-style-600nw-1467725033.jpg"
         });
 
         await newUser.save();
-        cb(null, newUser);
+        done(null, newUser);
       }
-      cb(null, doc);
+      done(null, doc);
     })
 
   }
 ));
 
 passport.use(new GitHubStrategy({
-  clientID: "your client id",
-  clientSecret: "your client secret",
+  clientID: config.GitHubclientID,
+  clientSecret: config.GitHubclientSecret,
   callbackURL: "/auth/github/callback"
 },
-  function (_, __, profile, cb) {
-
+function (request, accessToken, refreshToken, profile, done) {
     User.findOne({ githubId: profile.id }, async (err, doc) => {
-
       if (err) {
-        return cb(err, null);
+        return done(err, null);
       }
-
       if (!doc) {
-        
         const newUser = new User({
           githubId: profile.id,
-          username: profile.username,
-          avatar: "https://cdn-icons-png.flaticon.com/512/3177/3177440.png"
+          name: profile.displayName,
+          avatar: "https://www.shutterstock.com/image-vector/user-icon-trendy-flat-style-600nw-1467725033.jpg"
         });
-
         await newUser.save();
-        cb(null, newUser);
+        done(null, newUser);
       }
-      cb(null, doc);
+      done(null, doc);
     })
 
   }
@@ -170,18 +167,18 @@ app.get('/auth/google/callback',
 app.get('/auth/twitter', passport.authenticate('twitter'));
 
 app.get('/auth/twitter/callback',
-  passport.authenticate('twitter', { failureRedirect: 'https://gallant-hodgkin-fb9c52.netlify.app', session: true }),
+  passport.authenticate('twitter', { failureRedirect: 'http://localhost:3000/login', session: true }),
   function (req, res) {
-    res.redirect('http://localhost:5000/posts');
+    res.redirect('http://localhost:3000/posts');
   });
 
 
 app.get('/auth/github', passport.authenticate('github'));
 
 app.get('/auth/github/callback',
-  passport.authenticate('github', { failureRedirect: 'https://gallant-hodgkin-fb9c52.netlify.app', session: true }),
+  passport.authenticate('github', { failureRedirect: 'http://localhost:3000/login', session: true }),
   function (req, res) {
-    res.redirect('http://localhost:5000/posts');
+    res.redirect('http://localhost:3000/posts');
   });
 
 app.get("/getuser", (req, res) => {

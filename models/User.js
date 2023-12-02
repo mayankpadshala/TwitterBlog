@@ -23,7 +23,12 @@ const UserSchema = new mongoose.Schema({
   },
   googleId: {
     type: String,
-    unique: true
+  },
+  twitterId: {
+    type: String,
+  },
+  githubId: {
+    type: String,
   },
   website: {
     type: String

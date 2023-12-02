@@ -23,7 +23,7 @@ import {
 export const getPosts = () => async (dispatch) => {
   try {
     const res = await api.get('/posts');
-    console.log("res==>"+JSON.stringify(res.data));
+    
     dispatch({
       type: GET_POSTS,
       payload: res.data
@@ -37,10 +37,9 @@ export const getPosts = () => async (dispatch) => {
 };
 
 // Get postsbyId
-export const getPostsById = (id) => async (dispatch) => {
+export const getPostsById = (userid) => async (dispatch) => {
   try {
-    const res = await api.get(`/posts/${id}`);
-    console.log("res==>"+res.data)
+    const res = await api.get(`/posts/user/${userid}`);
     
     dispatch({
       type: GET_POSTS,

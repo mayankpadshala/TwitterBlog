@@ -12,7 +12,7 @@ const Profile = ({ getProfileById, profile: { profile }, auth , addFollower, UnF
   useEffect(() => {
     getProfileById(id);
   }, [getProfileById, id]);
-  console.log("pro==>"+JSON.stringify(profile));
+  
   return (
     <section className="container">
       {profile === null ? (
@@ -56,7 +56,7 @@ const Profile = ({ getProfileById, profile: { profile }, auth , addFollower, UnF
             </div>
             
           </div>
-          <UserPost/>
+          <UserPost id={profile._id}/>
         </Fragment>
       )}
     </section>
