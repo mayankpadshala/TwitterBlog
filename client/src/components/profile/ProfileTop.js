@@ -8,7 +8,7 @@ const ProfileTop = ({
     social,
     followers,
     following,
-    user: { name, avatar }
+    name, avatar 
   }
 }) => {
   

@@ -1,4 +1,5 @@
 import api from '../utils/api';
+import axios from 'axios';
 import { setAlert } from './alert';
 import {
   GET_POSTS,
@@ -22,7 +23,7 @@ import {
 export const getPosts = () => async (dispatch) => {
   try {
     const res = await api.get('/posts');
-    console.log((res))
+    console.log("res==>"+JSON.stringify(res.data));
     dispatch({
       type: GET_POSTS,
       payload: res.data
@@ -39,7 +40,8 @@ export const getPosts = () => async (dispatch) => {
 export const getPostsById = (id) => async (dispatch) => {
   try {
     const res = await api.get(`/posts/${id}`);
-
+    console.log("res==>"+res.data)
+    
     dispatch({
       type: GET_POSTS,
       payload: res.data

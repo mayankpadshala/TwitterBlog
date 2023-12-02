@@ -2,7 +2,6 @@ const express = require('express');
 const connectDB = require('./config/db');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const ws = require('ws');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger');
 //const redis = require('redis');
@@ -35,36 +34,32 @@ connectDB();
 // app.use(cookieParser());
 
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:5000", credentials: true }))
-
-app.set("trust proxy", 1);
-
-app.use(
-  session({
-    secret: "secretcode",
-    resave: true,
-    saveUninitialized: true,
-    cookie: {
-      sameSite: "none",
-      secure: true,
-      maxAge: 1000 * 60 * 60 * 24 * 7 // One Week
-    }
-  }))
-
+app.use(cors({ origin: "http://localhost:3000", credentials: true, "Access-Control-Allow-Origin": "http://localhost:3000"
+}));
 
 // Define Routes
-app.use('/api/users', require('./routes/api/users'));
-//app.use('/api/auth', require('./routes/api/auth'));
-app.use('/api/profile', require('./routes/api/profile'));
-app.use('/api/posts', require('./routes/api/posts'));
-app.use('/api/messages', require('./routes/api/messages'));
-app.use('/api/upload', require('./routes/api/upload'));
+
+app.set('trust proxy', 1) // trust first proxy
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}))
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument)); 
 app.use(morganMiddleware);
 
-app.use(passport.initialize());
-app.use(passport.session());
+app.use('/api/users', require('./routes/api/users'));
+//app.use('/api/auth', require('./routes/api/auth'));
+app.use('/api/profile', require('./routes/api/profile'));
+app.use('/api/posts', require('./routes/api/posts'));
+app.use('/api/upload', require('./routes/api/upload'));
 
 
 passport.serializeUser((user, done) => {
@@ -72,9 +67,8 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-
   User.findById(id, (err, doc) => {
-    // Whatever we return goes to the client and binds to the req.user property
+    //console.log("in deser==>"+doc)
     return done(null, doc);
   })
 })
@@ -85,24 +79,23 @@ passport.use(new GoogleStrategy({
   clientSecret: "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",
   callbackURL: "/auth/google/callback"
 },
-  function (_ , __, profile, cb) {
-    console.log("Passport google backend")
+  function (request, accessToken, refreshToken, profile, done) {
     User.findOne({ googleId: profile.id }, async (err, doc) => {
-
       if (err) {
         return cb(err, null);
       }
-
       if (!doc) {
+        
         const newUser = new User({
           googleId: profile.id,
-          username: profile.name.givenName
+          name: profile.displayName,
+          avatar: "https://www.shutterstock.com/image-vector/user-icon-trendy-flat-style-600nw-1467725033.jpg"
         });
-
+        //console.log("p==>"+JSON.stringify(profile));
         await newUser.save();
-        cb(null, newUser);
+        return done(null, newUser);
       }
-      cb(null, doc);
+      return done(null, doc);
     })
 
   }));
@@ -149,9 +142,11 @@ passport.use(new GitHubStrategy({
       }
 
       if (!doc) {
+        
         const newUser = new User({
           githubId: profile.id,
-          username: profile.username
+          username: profile.username,
+          avatar: "https://cdn-icons-png.flaticon.com/512/3177/3177440.png"
         });
 
         await newUser.save();
@@ -166,9 +161,9 @@ passport.use(new GitHubStrategy({
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }));
 
 app.get('/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: 'https://gallant-hodgkin-fb9c52.netlify.app', session: true }),
+  passport.authenticate('google', { failureRedirect: 'http://localhost:3000/login', session: true }),
   function (req, res) {
-    res.redirect('http://localhost:5000/posts');
+    res.redirect('http://localhost:3000/posts');
   });
 
 
@@ -189,15 +184,10 @@ app.get('/auth/github/callback',
     res.redirect('http://localhost:5000/posts');
   });
 
-
-
-app.get("/", (req, res) => {
-  res.send("Helllo WOlrd");
-})
-
 app.get("/getuser", (req, res) => {
   res.send(req.user);
 })
+
 
 app.get("/auth/logout", (req, res) => {
   if (req.user) {
