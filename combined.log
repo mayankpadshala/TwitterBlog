@@ -1,1 +1,132 @@
 {"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"GET /getuser 200 - - 1.796 ms"}
+{"level":"info","message":"GET /getuser 200 - - 1.529 ms"}
+{"level":"info","message":"GET /auth/google 302 0 - 1.038 ms"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"GET /getuser 200 - - 1.617 ms"}
+{"level":"info","message":"GET /auth/google 302 0 - 1.284 ms"}
+{"level":"info","message":"GET /auth/google/callback?code=4%2F0AfJohXlwu3Tbk9NQnmcIEa1vvQ0UCWGd_Rbnu-mQ0KVPimskUjtAj8rZpVRBf9-5zB4-gw&scope=profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile 302 98 - 718.934 ms"}
+{"level":"info","message":"GET /getuser 200 272 - 1.859 ms"}
+{"level":"info","message":"get profile by id"}
+{"level":"info","message":"GET /api/users/user/656a9aa1bd332632cc8b05a1 200 272 - 76.218 ms"}
+{"level":"info","message":"GET /api/posts/undefined 400 20 - 0.407 ms"}
+{"level":"info","message":"GET /api/posts/undefined 400 20 - 0.440 ms"}
+{"level":"info","message":"get profile by id"}
+{"level":"info","message":"GET /api/users/user/656a9aa1bd332632cc8b05a1 200 416 - 161.446 ms"}
+{"level":"info","message":"post profile"}
+{"level":"info","message":"POST /api/users/profile 200 416 - 403.375 ms"}
+{"level":"info","message":"GET /api/posts/undefined 400 20 - 0.294 ms"}
+{"level":"info","message":"get profile by id"}
+{"level":"info","message":"GET /api/users/user/656a9aa1bd332632cc8b05a1 200 533 - 74.535 ms"}
+{"level":"info","message":"post profile"}
+{"level":"info","message":"POST /api/users/profile 200 533 - 158.381 ms"}
+{"level":"info","message":"post posts"}
+{"level":"info","message":"POST /api/posts 200 290 - 159.370 ms"}
+{"level":"info","message":"get post by id"}
+{"level":"info","message":"GET /api/posts/656a9b2ebd332632cc8b05b8 200 290 - 72.399 ms"}
+{"level":"info","message":"put like"}
+{"level":"info","message":"PUT /api/posts/like/656a9b2ebd332632cc8b05b8 200 70 - 156.401 ms"}
+{"level":"info","message":"PUT /api/posts/like/656a9b2ebd332632cc8b05b8 400 28 - 73.226 ms"}
+{"level":"info","message":"PUT /api/posts/like/656a9b2ebd332632cc8b05b8 400 28 - 72.967 ms"}
+{"level":"info","message":"put unlike"}
+{"level":"info","message":"PUT /api/posts/unlike/656a9b2ebd332632cc8b05b8 200 2 - 149.862 ms"}
+{"level":"info","message":"PUT /api/posts/unlike/656a9b2ebd332632cc8b05b8 400 37 - 71.360 ms"}
+{"level":"info","message":"PUT /api/posts/unlike/656a9b2ebd332632cc8b05b8 400 37 - 72.427 ms"}
+{"level":"info","message":"put like"}
+{"level":"info","message":"PUT /api/posts/like/656a9b2ebd332632cc8b05b8 200 70 - 153.440 ms"}
+{"level":"info","message":"GET /api/posts/undefined 400 20 - 0.275 ms"}
+{"level":"info","message":"get profile by id"}
+{"level":"info","message":"GET /api/users/user/656a9aa1bd332632cc8b05a1 304 - - 86.111 ms"}
+{"level":"info","message":"put unlike"}
+{"level":"info","message":"PUT /api/posts/unlike/656a9b2ebd332632cc8b05b8 200 2 - 153.862 ms"}
+{"level":"info","message":"put like"}
+{"level":"info","message":"PUT /api/posts/like/656a9b2ebd332632cc8b05b8 200 70 - 151.743 ms"}
+{"level":"info","message":"put unlike"}
+{"level":"info","message":"PUT /api/posts/unlike/656a9b2ebd332632cc8b05b8 200 2 - 151.836 ms"}
+{"level":"info","message":"PUT /api/posts/unlike/656a9b2ebd332632cc8b05b8 400 37 - 74.190 ms"}
+{"level":"info","message":"PUT /api/posts/unlike/656a9b2ebd332632cc8b05b8 400 37 - 73.302 ms"}
+{"level":"info","message":"put like"}
+{"level":"info","message":"PUT /api/posts/like/656a9b2ebd332632cc8b05b8 200 70 - 149.552 ms"}
+{"level":"info","message":"PUT /api/posts/like/656a9b2ebd332632cc8b05b8 400 28 - 76.529 ms"}
+{"level":"info","message":"PUT /api/posts/like/656a9b2ebd332632cc8b05b8 400 28 - 70.850 ms"}
+{"level":"info","message":"PUT /api/posts/like/656a9b2ebd332632cc8b05b8 400 28 - 72.183 ms"}
+{"level":"info","message":"GET /getuser 200 533 - 0.460 ms"}
+{"level":"info","message":"GET /getuser 304 - - 0.550 ms"}
+{"level":"info","message":"GET /getuser 304 - - 1.332 ms"}
+{"level":"info","message":"GET /getuser 304 - - 0.620 ms"}
+{"level":"info","message":"GET /getuser 304 - - 0.727 ms"}
+{"level":"info","message":"GET /getuser 200 - - 0.339 ms"}
+{"level":"info","message":"GET /getuser 200 - - 0.259 ms"}
+{"level":"info","message":"GET /getuser 200 - - 0.557 ms"}
+{"level":"info","message":"get profile"}
+{"level":"info","message":"GET /api/users 200 1195 - 82.759 ms"}
+{"level":"info","message":"get profile"}
+{"level":"info","message":"GET /api/users 304 - - 83.831 ms"}
+{"level":"info","message":"GET /auth/google 302 0 - 0.410 ms"}
+{"level":"info","message":"GET /auth/google/callback?code=4%2F0AfJohXm1enRc6YxO_AxfobspvFAKMMUpW4Yl1imFDx0X8mlit4WZXmyrpjOSQ7wbs0WSrg&scope=profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile 302 98 - 491.079 ms"}
+{"level":"info","message":"GET /getuser 200 533 - 0.582 ms"}
+{"level":"info","message":"get profile by id"}
+{"level":"info","message":"GET /api/users/user/656a9aa1bd332632cc8b05a1 304 - - 73.602 ms"}
+{"level":"info","message":"GET /api/posts/undefined 400 20 - 0.289 ms"}
+{"level":"info","message":"GET /getuser 304 - - 1.436 ms"}
+{"level":"info","message":"GET /getuser 304 - - 0.667 ms"}
+{"level":"info","message":"GET /getuser 304 - - 0.642 ms"}
+{"level":"info","message":"GET /getuser 304 - - 1.241 ms"}
+{"level":"info","message":"GET /getuser 200 - - 0.313 ms"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"GET /getuser 200 - - 1.516 ms"}
+{"level":"info","message":"GET /auth/google 302 0 - 1.037 ms"}
+{"level":"info","message":"GET /auth/google/callback?code=4%2F0AfJohXljG7UVKQdtgSpbx57BGWYmyW5xOFqgrxL_FUsJQUC8xWgT6lla_7LMAwhmWf6sIA&scope=profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile 302 98 - 678.789 ms"}
+{"level":"info","message":"GET /getuser 200 533 - 2.316 ms"}
+{"level":"info","message":"get profile by id"}
+{"level":"info","message":"GET /api/users/user/656a9aa1bd332632cc8b05a1 304 - - 73.526 ms"}
+{"level":"info","message":"GET /api/posts/undefined 400 20 - 0.432 ms"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"GET /getuser 200 - - 11.881 ms"}
+{"level":"info","message":"GET /auth/google 302 0 - 4.899 ms"}
+{"level":"info","message":"GET /auth/google/callback?code=4%2F0AfJohXmzgFRew4LWPYykbRBfGISclaVsdlPlkeAlh9xcC7kK5P4zPgss-v2ivxqOs8fhcg&scope=profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile 302 98 - 776.937 ms"}
+{"level":"info","message":"GET /getuser 200 533 - 13.261 ms"}
+{"level":"info","message":"get profile by id"}
+{"level":"info","message":"GET /api/users/user/656a9aa1bd332632cc8b05a1 304 - - 101.320 ms"}
+{"level":"info","message":"GET /api/posts/undefined 400 20 - 2.889 ms"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"GET /getuser 200 - - 8.925 ms"}
+{"level":"info","message":"GET /auth/google 302 0 - 4.437 ms"}
+{"level":"info","message":"GET /auth/google/callback?code=4%2F0AfJohXmfA8krkMauioQwQqkAzTjtbccO7136sAp0eIXiSI0ZE63bI5PiWOAhlJ29DF98vA&scope=profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile 302 98 - 669.223 ms"}
+{"level":"info","message":"GET /getuser 200 533 - 13.537 ms"}
+{"level":"info","message":"get profile by id"}
+{"level":"info","message":"GET /api/users/user/656a9aa1bd332632cc8b05a1 200 533 - 89.201 ms"}
+{"level":"info","message":"GET /api/posts/undefined 400 20 - 2.254 ms"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"GET /getuser 200 - - 12.243 ms"}
+{"level":"info","message":"GET /auth/google 302 0 - 6.431 ms"}
+{"level":"info","message":"GET /auth/google/callback?code=4%2F0AfJohXlmXZ_2L3OZxqAj0zZfEYek-Eu8go-B0pMwQbsJ2eDJQ3pVP92xJEh5BEv4GELOEw&scope=profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile 302 98 - 789.798 ms"}
+{"level":"info","message":"GET /getuser 200 533 - 13.905 ms"}
+{"level":"info","message":"get profile by id"}
+{"level":"info","message":"GET /api/users/user/656a9aa1bd332632cc8b05a1 200 533 - 86.918 ms"}
+{"level":"info","message":"GET /api/posts/undefined 400 20 - 2.414 ms"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"GET /getuser 200 - - 9.865 ms"}
+{"level":"info","message":"GET /auth/google 302 0 - 3.629 ms"}
+{"level":"info","message":"GET /auth/google/callback?code=4%2F0AfJohXkhISwtvriKoW8BjPBTf2DoR5mJ1JmL6HibxrU7faZOPCLW2e-2z4gSP6sCPdwu8g&scope=profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile 302 98 - 687.864 ms"}
+{"level":"info","message":"GET /getuser 200 533 - 12.094 ms"}
+{"level":"info","message":"get profile by id"}
+{"level":"info","message":"GET /api/users/user/656a9aa1bd332632cc8b05a1 200 533 - 94.576 ms"}
+{"level":"info","message":"GET /api/posts/undefined 400 20 - 2.389 ms"}
+{"level":"info","message":"GET /api/qrImage 404 150 - 8.706 ms"}
+{"level":"info","message":"Server running on port 5000"}
+{"level":"info","message":"get profile by id"}
+{"level":"info","message":"GET /api/users/user/656a9aa1bd332632cc8b05a1 304 - - 198.795 ms"}
+{"level":"info","message":"GET /api/posts/undefined 400 20 - 4.366 ms"}
+{"level":"info","message":"GET /api/qrImage 500 17 - 4.502 ms"}
+{"level":"info","message":"Server running on port 5000"}

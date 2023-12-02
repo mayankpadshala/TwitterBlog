@@ -14,7 +14,8 @@ const GitHubStrategy = require('passport-github').Strategy;
 const cors = require('cors');
 const User = require('./models/User');
 const app = express();
-
+const qrcode = require("qrcode");
+const { authenticator } = require("otplib");
 // Connect Database
 connectDB();
 
@@ -75,8 +76,8 @@ passport.deserializeUser((id, done) => {
 
 
 passport.use(new GoogleStrategy({
-  clientID: "602322387096-ds7lr4lnm637uamuu56m8hflcmbc3gfh.apps.googleusercontent.com",
-  clientSecret: "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",
+  clientID: "your client id",
+  clientSecret: "your client secret",
   callbackURL: "/auth/google/callback"
 },
   function (request, accessToken, refreshToken, profile, done) {
@@ -101,8 +102,8 @@ passport.use(new GoogleStrategy({
   }));
 
 passport.use(new TwitterStrategy({
-  consumerKey: "c9Dcg87uxlEwhZ15tplF9xkLz",
-  consumerSecret: "1ESA0cq76m2rjF0HsXuohg1tkkNlfTmMpusICrZ05k8vJ9AbRv",
+  consumerKey: "your client id",
+  consumerSecret: "your secret key",
   callbackURL: "/auth/twitter/callback"
 },
   function (_ , __ , profile, cb) {
@@ -129,8 +130,8 @@ passport.use(new TwitterStrategy({
 ));
 
 passport.use(new GitHubStrategy({
-  clientID: "40feee01172a85cf2418",
-  clientSecret: "ccd7a8e782383c3c2117f244757f6dce22b4c0c5",
+  clientID: "your client id",
+  clientSecret: "your client secret",
   callbackURL: "/auth/github/callback"
 },
   function (_, __, profile, cb) {
@@ -195,6 +196,53 @@ app.get("/auth/logout", (req, res) => {
     res.send("done");
   }
 })
+
+// generater QR Image
+app.get("/api/qrImage", async (req, res) => {
+  try {
+    const { id } = req.cookies;
+    const user = await User.findById(req.user._id);
+    const secret = authenticator.generateSecret();
+    const uri = authenticator.keyuri(id, "2FA Tutorial", secret);
+    const image = await qrcode.toDataURL(uri);
+    user["2FA"].tempSecret = secret;
+    await user.save();
+    return res.send({
+      success: true,
+      image,
+    });
+  } catch {
+    return res.status(500).send({
+      success: false,
+    });
+  }
+});
+
+// set the 2 FA
+app.get("/set2FA", async (req, res) => {
+  try {
+    const { id } = req.cookies;
+    const { code } = req.query;
+    const user = await User.findById(req.user._id);
+    const { tempSecret } = user["2FA"];
+
+    const verified = authenticator.check(code, tempSecret);
+    if (!verified) throw false;
+
+    user["2FA"] = {
+      enabled: true,
+      secret: tempSecret,
+    };
+    await user.save();
+    return res.send({
+      success: true,
+    });
+  } catch {
+    return res.status(500).send({
+      success: false,
+    });
+  }
+});
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {

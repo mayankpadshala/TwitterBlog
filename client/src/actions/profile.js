@@ -72,6 +72,23 @@ export const getProfileById = (userId) => async (dispatch) => {
   }
 };
 
+export const twoFAEnable = () => async (dispatch) => {
+  try {
+    const res = await api.get(`/qrImage`);
+    console.log("qrimage"+JSON.stringify(res.data))
+    dispatch({
+
+      type: GET_PROFILE,
+      payload: res.data
+    });
+  } catch (err) {
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
+  }
+};
+
 // Get Github repos
 export const getGithubRepos = (username) => async (dispatch) => {
   try {

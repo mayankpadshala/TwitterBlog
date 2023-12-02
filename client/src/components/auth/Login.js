@@ -73,27 +73,6 @@ const twitterLogin = () => {
         Don't have an account? <Link to="/register">Sign Up</Link>
       </p>
 
-      <div class="border-bottom border-dark pt-4 mb-4"></div>
-      <div id="2FABox" class="d-flex flex-column align-items-center gap-3">
-        <button id="enable2FAButton" class="btn btn-success">
-          UPDATE/ENABLE 2FA
-        </button>
-        <div
-          id="twoFAFormHolder"
-          class="d-flex flex-column align-items-center gap-3"
-        >
-          <img id="qrImage" height="150" width="150" />
-          <form id="twoFAUpdateForm" class="d-flex flex-column gap-2">
-            <input
-              type="text"
-              name="code"
-              placeholder="2 FA Code"
-              class="form-control"
-            />
-            <button class="btn btn-primary" type="submit">SET</button>
-            </form>
-        </div>
-        </div>
       <div className="loginPage">
             <div className="loginForm">
                 <h1>Login</h1>

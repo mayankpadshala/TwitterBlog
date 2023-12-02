@@ -712,3 +712,18 @@ li,
 a {
     font-family: "Poppins", sans-serif;
 }
+#twoFAFormHolder {
+  display: none !important;
+}
+
+.ready #twoFAFormHolder {
+  display: flex !important;
+}
+
+#loginForm .code{
+  display: none;
+}
+
+#loginForm.codeRequested .code{
+  display: block;
+}
