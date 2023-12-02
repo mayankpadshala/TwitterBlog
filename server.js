@@ -7,7 +7,7 @@ const swaggerDocument = require('./swagger');
 //const redis = require('redis');
 const { logger, morganMiddleware } = require('./logger');
 const session = require('express-session');
-const passport = require('passport');
+const passport =require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const TwitterStrategy = require('passport-twitter').Strategy;
 const GitHubStrategy = require('passport-github').Strategy;
@@ -75,9 +75,9 @@ passport.deserializeUser((id, done) => {
 
 
 passport.use(new GoogleStrategy({
-  clientID: "602322387096-ds7lr4lnm637uamuu56m8hflcmbc3gfh.apps.googleusercontent.com",
-  clientSecret: "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",
-  callbackURL: "/auth/google/callback", 
+  clientID: "your client id",
+  clientSecret: "your client secret",
+  callbackURL: "/auth/google/callback"
 },
   function (request, accessToken, refreshToken, profile, done) {
     User.findOne({ googleId: profile.id }, async (err, doc) => {
@@ -101,8 +101,8 @@ passport.use(new GoogleStrategy({
   }));
 
 passport.use(new TwitterStrategy({
-  consumerKey: `${process.env.TWITTER_CLIENT_ID}`,
-  consumerSecret: `${process.env.TWITTER_CLIENT_SECRET}`,
+  consumerKey: "your consumer key",
+  consumerSecret: "your secret key",
   callbackURL: "/auth/twitter/callback"
 },
   function (_ , __ , profile, cb) {
@@ -129,8 +129,8 @@ passport.use(new TwitterStrategy({
 ));
 
 passport.use(new GitHubStrategy({
-  clientID: `${process.env.GITHUB_CLIENT_ID}`,
-  clientSecret: `${process.env.GITHUB_CLIENT_SECRET}`,
+  clientID: "your client id",
+  clientSecret: "your client secret",
   callbackURL: "/auth/github/callback"
 },
   function (_, __, profile, cb) {
@@ -172,7 +172,7 @@ app.get('/auth/twitter', passport.authenticate('twitter'));
 app.get('/auth/twitter/callback',
   passport.authenticate('twitter', { failureRedirect: 'https://gallant-hodgkin-fb9c52.netlify.app', session: true }),
   function (req, res) {
-    res.redirect('https://gallant-hodgkin-fb9c52.netlify.app');
+    res.redirect('http://localhost:5000/posts');
   });
 
 
@@ -181,7 +181,7 @@ app.get('/auth/github', passport.authenticate('github'));
 app.get('/auth/github/callback',
   passport.authenticate('github', { failureRedirect: 'https://gallant-hodgkin-fb9c52.netlify.app', session: true }),
   function (req, res) {
-    res.redirect('https://gallant-hodgkin-fb9c52.netlify.app');
+    res.redirect('http://localhost:5000/posts');
   });
 
 app.get("/getuser", (req, res) => {
