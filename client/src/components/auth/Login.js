@@ -3,95 +3,98 @@ import { Link, Navigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { login } from '../../actions/auth';
-
-// const Login = ({ login, isAuthenticated }) => {
-//   const [formData, setFormData] = useState({
-//     email: '',
-//     password: ''
-//   });
-
-//   const { email, password } = formData;
-
-//   const onChange = (e) =>
-//     setFormData({ ...formData, [e.target.name]: e.target.value });
-
-//   const onSubmit = (e) => {
-//     e.preventDefault();
-//     login(email, password);
-//   };
-
-//   if (isAuthenticated) {
-//     return <Navigate to="/posts" />;
-//   }
-
-//   return (
-//     <section className="container">
-//       <h1 className="large text-primary">Sign In</h1>
-//       <p className="lead">
-//         <i className="fas fa-user" /> Sign Into Your Account
-//       </p>
-//       <form className="form" onSubmit={onSubmit}>
-//         <div className="form-group">
-//           <input
-//             type="email"
-//             placeholder="Email Address"
-//             name="email"
-//             value={email}
-//             onChange={onChange}
-//           />
-//         </div>
-//         <div className="form-group">
-//           <input
-//             type="password"
-//             placeholder="Password"
-//             name="password"
-//             value={password}
-//             onChange={onChange}
-//             minLength="6"
-//           />
-//         </div>
-//         <input type="submit" className="btn btn-primary" value="Login" />
-//       </form>
-//       <p className="my-1">
-//         Don't have an account? <Link to="/register">Sign Up</Link>
-//       </p>
-//     </section>
-//   );
-// };
-
-// Login.propTypes = {
-//   login: PropTypes.func.isRequired,
-//   isAuthenticated: PropTypes.bool
-// };
-
-// const mapStateToProps = (state) => ({
-//   isAuthenticated: state.auth.isAuthenticated
-// });
-
-// export default connect(mapStateToProps, { login })(Login);
-
-
 import googleImage from '../../assets/googleImage.png';
 import githubImage from '../../assets/githubImage.png';
 import twitterImage from '../../assets/twitterImage.png';
 
-export default function LoginPage() {
+const Login = ({ login, isAuthenticated }) => {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+  const googleLogin = () => {
+    window.open("http://localhost:5000/auth/google", "_self");
+}
 
-    const googleLogin = () => {
-        window.open("http://localhost:5000/auth/google", "_self");
-    }
+const githubLogin = () => {
+    window.open("http://localhost:5000/auth/github", "_self");
+}
 
-    const githubLogin = () => {
-        window.open("http://localhost:5000/auth/github", "_self");
-    }
-    
-    const twitterLogin = () => {
-        window.location.href = "http://localhost:5000/auth/twitter"
-    }
+const twitterLogin = () => {
+    window.location.href = "http://localhost:5000/auth/twitter"
+}
 
+  const { email, password } = formData;
 
-    return (
-        <div className="loginPage">
+  const onChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    login(email, password);
+  };
+
+  if (isAuthenticated) {
+    return <Navigate to="/posts" />;
+  }
+
+  return (
+    <section className="container">
+      <h1 className="large text-primary">Sign In</h1>
+      <p className="lead">
+        <i className="fas fa-user" /> Sign Into Your Account
+      </p>
+      <form className="form" onSubmit={onSubmit}>
+        <div className="form-group">
+          <input
+            type="email"
+            placeholder="Email Address"
+            name="email"
+            value={email}
+            onChange={onChange}
+          />
+        </div>
+        <div className="form-group">
+          <input
+            type="password"
+            placeholder="Password"
+            name="password"
+            value={password}
+            onChange={onChange}
+            minLength="6"
+          />
+        </div>
+        <input type="submit" className="btn btn-primary" value="Login" />
+      </form>
+      <p className="forgotPassword">
+        Forgot password? <Link to="/forgotPassword">Reset password</Link>
+      </p>
+      <p className="my-1">
+        Don't have an account? <Link to="/register">Sign Up</Link>
+      </p>
+
+      <div class="border-bottom border-dark pt-4 mb-4"></div>
+      <div id="2FABox" class="d-flex flex-column align-items-center gap-3">
+        <button id="enable2FAButton" class="btn btn-success">
+          UPDATE/ENABLE 2FA
+        </button>
+        <div
+          id="twoFAFormHolder"
+          class="d-flex flex-column align-items-center gap-3"
+        >
+          <img id="qrImage" height="150" width="150" />
+          <form id="twoFAUpdateForm" class="d-flex flex-column gap-2">
+            <input
+              type="text"
+              name="code"
+              placeholder="2 FA Code"
+              class="form-control"
+            />
+            <button class="btn btn-primary" type="submit">SET</button>
+            </form>
+        </div>
+        </div>
+      <div className="loginPage">
             <div className="loginForm">
                 <h1>Login</h1>
                 <div className="googleContainer" onClick={googleLogin}>
@@ -112,5 +115,18 @@ export default function LoginPage() {
             </div>
 
         </div>
-    )
-}
+    </section>
+    
+  );
+};
+
+Login.propTypes = {
+  login: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool
+};
+
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(mapStateToProps, { login })(Login);

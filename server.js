@@ -81,8 +81,8 @@ passport.deserializeUser((id, done) => {
 
 
 passport.use(new GoogleStrategy({
-  clientID: "your client id",
-  clientSecret: "your client secret",
+  clientID: "602322387096-ds7lr4lnm637uamuu56m8hflcmbc3gfh.apps.googleusercontent.com",
+  clientSecret: "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",
   callbackURL: "/auth/google/callback"
 },
   function (_ , __, profile, cb) {
@@ -108,8 +108,8 @@ passport.use(new GoogleStrategy({
   }));
 
 passport.use(new TwitterStrategy({
-  consumerKey: "your consumer key",
-  consumerSecret: "your secret key",
+  consumerKey: "c9Dcg87uxlEwhZ15tplF9xkLz",
+  consumerSecret: "1ESA0cq76m2rjF0HsXuohg1tkkNlfTmMpusICrZ05k8vJ9AbRv",
   callbackURL: "/auth/twitter/callback"
 },
   function (_ , __ , profile, cb) {
@@ -136,8 +136,8 @@ passport.use(new TwitterStrategy({
 ));
 
 passport.use(new GitHubStrategy({
-  clientID: "your client id",
-  clientSecret: "your client secret",
+  clientID: "40feee01172a85cf2418",
+  clientSecret: "ccd7a8e782383c3c2117f244757f6dce22b4c0c5",
   callbackURL: "/auth/github/callback"
 },
   function (_, __, profile, cb) {
