@@ -8,8 +8,6 @@ const { check, validationResult } = require('express-validator');
 const { logger } = require('../../logger');
 
 const User = require('../../models/User');
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 // @route    GET api/auth
 // @desc     Get user by token

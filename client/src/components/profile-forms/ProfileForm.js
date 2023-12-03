@@ -65,12 +65,6 @@ const ProfileForm = ({
     youtube,
     instagram, 
   } = formData;
-
-  const handleImageChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      formData.image = e.target.files[0];
-    }
-  };
   
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
