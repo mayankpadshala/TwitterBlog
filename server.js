@@ -197,17 +197,40 @@ app.get("/auth/logout", (req, res) => {
 // generater QR Image
 app.get("/api/qrImage", async (req, res) => {
   try {
-    const { id } = req.cookies;
+    //console.log("reqUserIdtrace:", req.user._id);
+    //const { id } = req.cookies;
+    //console.log("idtrace:", id);
     const user = await User.findById(req.user._id);
+    console.log("usertrace:", user);
     const secret = authenticator.generateSecret();
-    const uri = authenticator.keyuri(id, "2FA Tutorial", secret);
+    console.log("Secrettrace:", secret);
+    const uri = authenticator.keyuri(user._id, "2FA", secret);
+    console.log("uritrace:", uri);
     const image = await qrcode.toDataURL(uri);
-    user["2FA"].tempSecret = secret;
+    console.log("imagetrace:", image);
+    user["twoFA"].tempSecret = secret;
     await user.save();
-    return res.send({
-      success: true,
-      image,
-    });
+    console.log("user after save:", user)
+    try {
+      const profile = await User.findById(req.user._id);
+      console.log("profiletrace = ",profile)
+      if (!profile) {
+        return res.status(400).json({ msg: 'There is no profile for this user' });
+      }
+      logger.info('get profile me');
+      //profile.image=image;
+      user["twoFA"].qrImage = image;
+      await user.save();
+      return res.json(
+       profile,
+      );
+        //res.json(profile);
+    } catch (err) {
+      console.error(err.message);}
+    // return res.send({
+    //   success: true,
+    //   image,
+    // });
   } catch {
     return res.status(500).send({
       success: false,
@@ -218,8 +241,8 @@ app.get("/api/qrImage", async (req, res) => {
 // set the 2 FA
 app.get("/set2FA", async (req, res) => {
   try {
-    const { id } = req.cookies;
-    const { code } = req.query;
+    //const { id } = req.cookies;
+    //const { code } = req.query;
     const user = await User.findById(req.user._id);
     const { tempSecret } = user["2FA"];
 
