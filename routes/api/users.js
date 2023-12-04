@@ -4,10 +4,11 @@ const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
+const auth = require('../../middleware/auth');
 const { logger } = require('../../logger');
 const { check, validationResult } = require('express-validator');
 const normalize = require('normalize-url');
-
+const mongoose = require('mongoose');
 const User = require('../../models/User');
 //const Profile = require('../../models/Profile');
 const checkObjectId = require('../../middleware/checkObjectId');
@@ -53,8 +54,7 @@ const checkObjectId = require('../../middleware/checkObjectId');
  *       400:
  *         description: Invalid input or user already exists.
  */
-router.post(
-  '/',
+router.post('/',
   check('name', 'Name is required').notEmpty(),
   check('email', 'Please include a valid email').isEmail(),
   check(
@@ -102,7 +102,7 @@ router.post(
 
       const payload = {
         user: {
-          id: user.id
+          _id: user.id
         }
       };
 
@@ -123,7 +123,7 @@ router.post(
       //   console.error(err.message);
       //   return res.status(500).send('Server Error');
       // }
-
+      console.log(user)
       jwt.sign(
         payload,
         config.get('jwtSecret'),
@@ -143,7 +143,7 @@ router.post(
 );
 
 
-router.get('/user/:user_id',
+router.get('/user/:user_id',auth ,
   checkObjectId('user_id'),
   async ({ params: { user_id } }, res) => {
     try {
@@ -159,7 +159,7 @@ router.get('/user/:user_id',
   }
 );
 
-router.get('/me' , async (req, res) => {
+router.get('/me' ,auth , async (req, res) => {
   try {
     const profile = await User.findOne({
       user: req.user._id
@@ -192,7 +192,7 @@ router.get('/me' , async (req, res) => {
  *       500:
  *         description: Server error.
  */
-router.get('/', async (req, res) => {
+router.get('/',auth , async (req, res) => {
   try {
     const profiles = await User.find();
     logger.info('get profile');
@@ -237,12 +237,9 @@ router.get('/', async (req, res) => {
  *       500:
  *         description: Server error.
  */
-router.post('/profile',
+router.post('/profile', auth ,
   async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+    
 
     // destructure the request
     const {
@@ -258,7 +255,6 @@ router.post('/profile',
 
     // build a profile
     const profileFields = {
-      user: req.user._id,
       website:
         website && website !== ''
           ? normalize(website, { forceHttps: true })
@@ -276,16 +272,18 @@ router.post('/profile',
     }
     // add to profileFields
     profileFields.social = socialFields;
-
+    console.log(req.user);
     try {
       // Using upsert option (creates new doc if no match is found):
-      let newprofile = await User.findByIdAndUpdate(req.user._id ,
+      let newprofile = await User.findOneAndUpdate(
+        { _id: mongoose.Types.ObjectId(req.user._id) },
         { $set: profileFields },
-        { new: true, upsert: true, setDefaultsOnInsert: true }
+        { new: true, setDefaultsOnInsert: true }
       );
-      const profile = await newprofile.save();
+      console.log(newprofile);
+      //const profile = await newprofile.save();
       logger.info('post profile');
-      return res.json(profile);
+      return res.json(newprofile);
     } catch (err) {
       console.error(err.message);
       logger.error('post profile-err'+err.message);
@@ -297,7 +295,7 @@ router.post('/profile',
 // @route    PUT api/profile/follow/:id
 // @desc     User click follow on id's profile then user Added in id's follower and id added in user's following
 // @access   Private
-router.put('/follow/:id' , checkObjectId('id'), async (req, res) => {
+router.put('/follow/:id' ,auth , checkObjectId('id'), async (req, res) => {
   try {
     const followprofile = await User.findById(req.params.id);
     const userid = await User.findById(req.user._id);
@@ -320,7 +318,7 @@ router.put('/follow/:id' , checkObjectId('id'), async (req, res) => {
 // @route    PUT api/profile/unfollow/:id
 // @desc     unfollow a post
 // @access   Private
-router.put('/unfollow/:id' , checkObjectId('id'), async (req, res) => {
+router.put('/unfollow/:id' ,auth , checkObjectId('id'), async (req, res) => {
   try {
     const Unfollowprofile = await User.findById(req.params.id);
     const userid = await User.findById(req.user._id);

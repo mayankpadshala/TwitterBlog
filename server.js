@@ -58,7 +58,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(morganMiddleware);
 
 app.use('/api/users', require('./routes/api/users'));
-//app.use('/api/auth', require('./routes/api/auth'));
+app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/profile', require('./routes/api/profile'));
 app.use('/api/posts', require('./routes/api/posts'));
 app.use('/api/upload', require('./routes/api/upload'));
@@ -108,18 +108,21 @@ passport.use(new TwitterStrategy({
   callbackURL: "/auth/twitter/callback"
 },
 function (request, accessToken, refreshToken, profile, done) {
-
     User.findOne({ twitterId: profile.id }, async (err, doc) => {
-
       if (err) {
         return done(err, null);
       }
-
       if (!doc) {
+        image = ""
+        if(profile._json.profile_image_url){
+          image = profile._json.profile_image_url;
+        }else{
+          image = "https://www.shutterstock.com/image-vector/user-icon-trendy-flat-style-600nw-1467725033.jpg";
+        }
         const newUser = new User({
           twitterId: profile.id,
           name: profile.displayName,
-          avatar: profile._json.picture//"https://www.shutterstock.com/image-vector/user-icon-trendy-flat-style-600nw-1467725033.jpg"
+          avatar: "https://www.shutterstock.com/image-vector/user-icon-trendy-flat-style-600nw-1467725033.jpg"
         });
 
         await newUser.save();
@@ -142,10 +145,11 @@ function (request, accessToken, refreshToken, profile, done) {
         return done(err, null);
       }
       if (!doc) {
+        
         const newUser = new User({
           githubId: profile.id,
           name: profile.displayName,
-          avatar: profile._json.picture// "https://www.shutterstock.com/image-vector/user-icon-trendy-flat-style-600nw-1467725033.jpg"
+          avatar: "https://www.shutterstock.com/image-vector/user-icon-trendy-flat-style-600nw-1467725033.jpg"
         });
         await newUser.save();
         done(null, newUser);
@@ -183,14 +187,23 @@ app.get('/auth/github/callback',
   });
 
 app.get("/getuser", (req, res) => {
+  console.log("getuserData"+JSON.stringify(req.user));
   res.send(req.user);
 })
 
 
 app.get("/auth/logout", (req, res) => {
   if (req.user) {
-    req.logout();
-    res.send("done");
+    req.logout(function(err) {
+      if (err) { 
+        return next(err); 
+      }
+      req.session.destroy();
+      res.redirect('http://localhost:3000/');
+    });
+  } else {
+    // Handle the case where there is no user to log out
+    res.redirect('http://localhost:3000/');
   }
 })
 

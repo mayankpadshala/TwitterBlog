@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
-//const auth = require('../../middleware/auth');
+const auth = require('../../middleware/auth');
 const { logger } = require('../../logger');
 const Post = require('../../models/Post');
 const User = require('../../models/User');
@@ -17,8 +17,7 @@ redisClient.connect().catch(console.error);
 // @route    POST api/posts
 // @desc     Create a post
 // @access   Private
-router.post(
-  '/',
+router.post('/', auth,
   check('text', 'Text is required').notEmpty(),
   async (req, res) => {
     const errors = validationResult(req);
@@ -68,7 +67,7 @@ router.post(
  *         description: Server error.
  */
 
-router.get('/', async (req, res) => {
+router.get('/',auth, async (req, res) => {
   const redisKey = `posts-user-${req.user._id}`; // Unique Redis key for each user's posts
 
     try {
@@ -126,7 +125,7 @@ router.get('/', async (req, res) => {
  *       500:
  *         description: Server error.
  */
-router.get('/user/:id', async (req, res) => {
+router.get('/user/:id', auth, async (req, res) => {
   try {
     const posts = await Post.find({"user" : req.user._id}).sort({ date: -1 });
     logger.info('get posts');
@@ -164,7 +163,7 @@ router.get('/user/:id', async (req, res) => {
  *       500:
  *         description: Server error.
  */
-router.get('/:id', checkObjectId('id'), async (req, res) => {
+router.get('/:id',auth, checkObjectId('id'), async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
 
@@ -205,7 +204,7 @@ router.get('/:id', checkObjectId('id'), async (req, res) => {
  *       500:
  *         description: Server error.
  */
-router.delete('/:id', [ checkObjectId('id')], async (req, res) => {
+router.delete('/:id',auth, [ checkObjectId('id')], async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
 
@@ -231,7 +230,7 @@ router.delete('/:id', [ checkObjectId('id')], async (req, res) => {
 // @route    PUT api/posts/like/:id
 // @desc     Like a post
 // @access   Private
-router.put('/like/:id', checkObjectId('id'), async (req, res) => {
+router.put('/like/:id',auth, checkObjectId('id'), async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
     
@@ -255,7 +254,7 @@ router.put('/like/:id', checkObjectId('id'), async (req, res) => {
 // @route    PUT api/posts/unlike/:id
 // @desc     Unlike a post
 // @access   Private
-router.put('/unlike/:id', checkObjectId('id'), async (req, res) => {
+router.put('/unlike/:id',auth, checkObjectId('id'), async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
 
@@ -283,7 +282,7 @@ router.put('/unlike/:id', checkObjectId('id'), async (req, res) => {
 // @desc     Comment on a post
 // @access   Private
 router.post(
-  '/comment/:id',
+  '/comment/:id',auth,
   checkObjectId('id'),
   check('text', 'Text is required').notEmpty(),
   async (req, res) => {
@@ -319,7 +318,7 @@ router.post(
 // @route    DELETE api/posts/comment/:id/:comment_id
 // @desc     Delete comment
 // @access   Private
-router.delete('/comment/:id/:comment_id', async (req, res) => {
+router.delete('/comment/:id/:comment_id',auth, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
 

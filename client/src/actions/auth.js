@@ -93,4 +93,48 @@ export const login = (email, password) => async (dispatch) => {
 };
 
 // Logout
-export const logout = () => ({ type: LOGOUT });
+export const logout = () => async (dispatch) => {
+  try {
+    axios.get("http://localhost:5000/auth/logout", { withCredentials: true }).then((res) => {
+             if (res.data) {
+              dispatch({
+                type: LOGOUT
+              });
+                //setUserObject(res.data);
+            }
+        })
+  } catch (err) {
+    const errors = err.response.data.errors;
+
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+
+    dispatch({
+      type: LOGOUT
+    });
+  }
+};
+
+// Register User
+export const sendPasswordResetEmail = (email) => async (dispatch) => {
+  try {
+    const res = await api.post('/users/sendcode', email);
+
+    dispatch({
+      type: REGISTER_SUCCESS,
+      payload: res.data
+    });
+    dispatch(loadUser());
+  } catch (err) {
+    const errors = err.response.data.errors;
+
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+
+    dispatch({
+      type: REGISTER_FAIL
+    });
+  }
+};
