@@ -8,7 +8,6 @@ import UserPost from './UserPost';
 import { getProfileById , twoFAEnable, addFollower, UnFollow, deleteAccount } from '../../actions/profile';
 
 
-
 const Profile = ({ getProfileById,twoFAEnable, deleteAccount, profile: { profile }, auth , addFollower, UnFollow}) => {
   const { id } = useParams();
   useEffect(() => {
@@ -75,6 +74,11 @@ const Profile = ({ getProfileById,twoFAEnable, deleteAccount, profile: { profile
             />
             <button className="btn btn-primary" type="submit">SET</button>
             </form>
+           
+
+
+export default Profile;
+
         </div>
         </div>
           </div>

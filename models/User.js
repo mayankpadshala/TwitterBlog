@@ -56,6 +56,20 @@ const UserSchema = new mongoose.Schema({
       type: String
     }
   },
+  twoFA:{
+    secret:{
+      type:String
+    },
+    enabled:{
+      type:String
+    },
+    tempSecret:{
+      type:String
+    },
+    qrImage:{
+      type: String
+    }
+  },
   followers: [
     {
       user: {
