@@ -1,17 +1,29 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate  } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { sendPasswordResetEmail } from '../../actions/auth';
 
-const ForgotPassword = ({ }) => {
+const ForgotPassword = ({ sendPasswordResetEmail }) => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
-  const code =""
+  const [otp, setOtp] = useState(Math.floor(100000 + Math.random() * 900000));
+  const [writecode, setcode] = useState('');
+
+  console.log("otp==>"+otp);
   const onChange = (e) => setEmail(e.target.value);
+  const onChange2 = (e) => setcode(e.target.value);
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    sendPasswordResetEmail(email);
+    sendPasswordResetEmail(email, otp);
+  };
+  
+  const onSubmit2 = async (e) => {
+    e.preventDefault();
+    if(writecode == otp){
+      navigate("/confirmPassword", { state : {email: email}});
+    }
   };
 
   return (
@@ -33,13 +45,19 @@ const ForgotPassword = ({ }) => {
         </div>
         <input type="submit" className="btn btn-primary" value="Send code" />
       </form>
-      <input
+      <form className="form" onSubmit={onSubmit2}>
+        <div className="form-group">
+          <input
             type="text"
             placeholder="code"
             name="code"
-            value={code}
+            value={writecode}
+            onChange={onChange2}
             required
           />
+        </div>
+        <input type="submit" className="btn btn-primary" value="Confirm" />
+      </form>
       <p className="my-1">
         Remembered your password? <Link to="/login">Sign In</Link>
       </p>
@@ -48,7 +66,7 @@ const ForgotPassword = ({ }) => {
 };
 
 ForgotPassword.propTypes = {
-  //sendPasswordResetEmail: PropTypes.func.isRequired,
+  sendPasswordResetEmail: PropTypes.func.isRequired
 };
 
-export default connect(null, {  })(ForgotPassword);
+export default connect(null, {sendPasswordResetEmail  })(ForgotPassword);

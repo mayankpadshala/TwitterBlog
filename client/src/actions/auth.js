@@ -116,16 +116,16 @@ export const logout = () => async (dispatch) => {
   }
 };
 
-// Register User
-export const sendPasswordResetEmail = (email) => async (dispatch) => {
+// sendPasswordResetEmail
+export const sendPasswordResetEmail = (email, otp) => async (dispatch) => {
   try {
-    const res = await api.post('/users/sendcode', email);
+    const body = {email, otp};
+    const res = await api.put('/users/sendcode', body);
 
     dispatch({
-      type: REGISTER_SUCCESS,
+      type: REGISTER_FAIL,
       payload: res.data
     });
-    dispatch(loadUser());
   } catch (err) {
     const errors = err.response.data.errors;
 
@@ -137,4 +137,26 @@ export const sendPasswordResetEmail = (email) => async (dispatch) => {
       type: REGISTER_FAIL
     });
   }
+};
+
+export const newPassword = (body) => async (dispatch) => {
+    try {
+      const res = await api.put('/users/resetpassword', body);
+  
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: res.data
+      });
+      dispatch(loadUser());
+    } catch (err) {
+      const errors = err.response.data.errors;
+  
+      if (errors) {
+        errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+      }
+  
+      dispatch({
+        type: LOGIN_FAIL
+      });
+    }
 };

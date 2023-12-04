@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const auth = require('../../middleware/auth');
+const nodemailer = require("nodemailer");
 const { logger } = require('../../logger');
 const { check, validationResult } = require('express-validator');
 const normalize = require('normalize-url');
@@ -341,4 +342,130 @@ router.put('/unfollow/:id' ,auth , checkObjectId('id'), async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+function sendEmail({ recipient_email, OTP }) {
+  return new Promise((resolve, reject) => {
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: "krushika.nodemailer@gmail.com", // Your email
+        pass: "sjdt sysk pufz xkun",  // Your email password
+      },
+    });
+//sjdt sysk pufz xkun
+    const mail_configs = {
+      from: "krushika.nodemailer@gmail.com",
+      to: recipient_email,
+      subject: "Microblab PASSWORD RECOVERY",
+      html: `<!DOCTYPE html>
+            <html lang="en" >
+            <head>
+              <meta charset="UTF-8">
+              <title>CodePen - OTP Email Template</title>
+              
+
+            </head>
+            <body>
+            <!-- partial:index.partial.html -->
+            <div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
+              <div style="margin:50px auto;width:70%;padding:20px 0">
+                <div style="border-bottom:1px solid #eee">
+                  <a href="" style="font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600">Microblab</a>
+                </div>
+                <p style="font-size:1.1em">Hi,</p>
+                <p>Thank you for choosing Microblab. Use the following OTP to complete your Password Recovery Procedure. OTP is valid for 5 minutes</p>
+                <h2 style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">${OTP}</h2>
+                <p style="font-size:0.9em;">Regards,<br />Microblab</p>
+                <hr style="border:none;border-top:1px solid #eee" />
+                <div style="float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
+                  <p>Microblab</p>
+                  <p>San Jose State University</p>
+                  <p>California</p>
+                </div>
+              </div>
+            </div>
+            <!-- partial -->
+              
+            </body>
+            </html>`,
+                };
+    transporter.sendMail(mail_configs, function (error, info) {
+      if (error) {
+        console.log(error);
+        return reject({ message: `An error has occured` });
+      }
+      return resolve({ message: "Email sent succesfuly" });
+    });
+  });
+}
+
+router.put('/sendcode' , async (req, res) => {
+  try {
+    let user = await User.findOne({ email });
+
+    if (user) {
+      await sendEmail({ recipient_email : req.body.email, OTP : req.body.otp})
+      return res
+          .status(200)
+          .json({ errors: [{ msg: 'Code Sent' }] });
+    }else{
+      return res
+          .status(400)
+          .json({ errors: [{ msg: 'Email does not exist!' }] });
+    }
+  
+  } catch (err) {
+    console.error(err.message);
+    logger.error('sendcode user-err'+err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+router.put('/resetpassword',
+  check('email', 'Please include a valid email').isEmail(),
+  check(
+    'password',
+    'Please enter a password with 6 or more characters'
+  ).isLength({ min: 6 }),
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { email, password } = req.body;
+
+    try {
+      let user = await User.findOne({ email });
+
+      if (user) {
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(password, salt);
+        await user.save();
+      }
+
+      const payload = {
+        user: {
+          _id: user.id
+        }
+      };
+
+      console.log(user)
+      jwt.sign(
+        payload,
+        config.get('jwtSecret'),
+        { expiresIn: '5 days' },
+        (err, token) => {
+          if (err) throw err;
+          logger.info('post user');
+          res.json({ token , user});
+        }
+      );
+    } catch (err) {
+      console.error(err.message);
+      logger.error('post user-err'+err.message);
+      res.status(500).send('Server error');
+    }
+  }
+);
+
 module.exports = router;

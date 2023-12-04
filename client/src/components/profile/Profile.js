@@ -5,11 +5,11 @@ import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
 import ProfileTop from './ProfileTop';
 import UserPost from './UserPost';
-import { getProfileById , twoFAEnable, addFollower, UnFollow } from '../../actions/profile';
+import { getProfileById , twoFAEnable, addFollower, UnFollow, deleteAccount } from '../../actions/profile';
 
 
 
-const Profile = ({ getProfileById,twoFAEnable, profile: { profile }, auth , addFollower, UnFollow}) => {
+const Profile = ({ getProfileById,twoFAEnable, deleteAccount, profile: { profile }, auth , addFollower, UnFollow}) => {
   const { id } = useParams();
   useEffect(() => {
     getProfileById(id);
@@ -79,6 +79,16 @@ const Profile = ({ getProfileById,twoFAEnable, profile: { profile }, auth , addF
         </div>
           </div>
           <UserPost id={profile._id}/>
+
+          {auth.isAuthenticated &&
+            auth.loading === false &&
+            auth.user._id === profile._id && (
+              <div className="my-2">
+                <button className="btn btn-danger" onClick={() => deleteAccount()}>
+                  <i className="fas fa-user-minus" /> Delete My Account
+                </button>
+              </div>
+            )}
         </Fragment>
       )}
     </section>
@@ -91,7 +101,8 @@ Profile.propTypes = {
   profile: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   addFollower: PropTypes.func.isRequired,
-  UnFollow : PropTypes.func.isRequired
+  UnFollow : PropTypes.func.isRequired,
+  deleteAccount: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -99,4 +110,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { getProfileById,twoFAEnable, addFollower, UnFollow })(Profile);
+export default connect(mapStateToProps, { getProfileById,twoFAEnable, addFollower, UnFollow, deleteAccount })(Profile);

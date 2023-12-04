@@ -91,7 +91,7 @@ passport.use(new GoogleStrategy({
         const newUser = new User({
           googleId: profile.id,
           name: profile.displayName,
-          avatar: profile._json.picture//"https://www.shutterstock.com/image-vector/user-icon-trendy-flat-style-600nw-1467725033.jpg"
+          avatar: "https://www.shutterstock.com/image-vector/user-icon-trendy-flat-style-600nw-1467725033.jpg"
         });
         //console.log("p==>"+JSON.stringify(profile));
         await newUser.save();
@@ -113,12 +113,12 @@ function (request, accessToken, refreshToken, profile, done) {
         return done(err, null);
       }
       if (!doc) {
-        image = ""
-        if(profile._json.profile_image_url){
-          image = profile._json.profile_image_url;
-        }else{
-          image = "https://www.shutterstock.com/image-vector/user-icon-trendy-flat-style-600nw-1467725033.jpg";
-        }
+        // image = ""
+        // if(profile._json.profile_image_url){
+        //   image = profile._json.profile_image_url;
+        // }else{
+        //   image = "https://www.shutterstock.com/image-vector/user-icon-trendy-flat-style-600nw-1467725033.jpg";
+        // }
         const newUser = new User({
           twitterId: profile.id,
           name: profile.displayName,

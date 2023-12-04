@@ -719,3 +719,12 @@ a {
 #loginForm.codeRequested .code{
   display: block;
 }
+
+.searchbox{
+  display: block;
+  width: 30%;
+  float: right;
+  padding: 0.4rem;
+  font-size: 1.2rem;
+  border: 1px solid #ccc;
+}
