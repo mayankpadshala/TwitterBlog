@@ -1,19 +1,34 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Spinner from '../layout/Spinner';
 import ProfileTop from './ProfileTop';
 import UserPost from './UserPost';
-import { getProfileById , twoFAEnable, addFollower, UnFollow, deleteAccount } from '../../actions/profile';
+import { getProfileById , twoFAEnable, settwoFA, addFollower, UnFollow, deleteAccount } from '../../actions/profile';
 
 
-const Profile = ({ getProfileById,twoFAEnable, deleteAccount, profile: { profile }, auth , addFollower, UnFollow}) => {
+const Profile = ({ getProfileById,twoFAEnable, settwoFA, deleteAccount, profile: { profile }, auth , addFollower, UnFollow}) => {
   const { id } = useParams();
   useEffect(() => {
     getProfileById(id);
   }, [getProfileById, id]);
 
+  const [showTwoFAForm, setShowTwoFAForm] = useState(false);
+  const [code, setCode] = useState('');
+  const onChange = (e) => setCode(e.target.value);
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    settwoFA({ code });
+  };
+  useEffect(() => {
+    if (profile && profile.twoFA && profile.twoFA.qrImage) {
+      setShowTwoFAForm(true);
+    }else{
+      setShowTwoFAForm(false);
+    }
+  }, [profile]);
+  console.log(auth)
   return (
     <section className="container">
       {profile === null ? (
@@ -55,32 +70,7 @@ const Profile = ({ getProfileById,twoFAEnable, deleteAccount, profile: { profile
                   </button>
               )}
             </div>
-            <div className="border-bottom border-dark pt-4 mb-4"></div>
-      <div id="2FABox" className="d-flex flex-column align-items-center gap-3">
-        <button id="enable2FAButton" className="btn btn-success"  onClick={() => twoFAEnable()}>
-          UPDATE/ENABLE 2FA
-        </button>
-        <div
-          id="twoFAFormHolder"
-          className="d-flex flex-column align-items-center gap-3"
-        >
-          <img id="qrImage" height="150" width="150" />
-          <form id="twoFAUpdateForm" className="d-flex flex-column gap-2">
-            <input
-              type="text"
-              name="code"
-              placeholder="2 FA Code"
-              className="form-control"
-            />
-            <button className="btn btn-primary" type="submit">SET</button>
-            </form>
-           
-
-
-export default Profile;
-
-        </div>
-        </div>
+             
           </div>
           <UserPost id={profile._id}/>
 
@@ -88,9 +78,30 @@ export default Profile;
             auth.loading === false &&
             auth.user._id === profile._id && (
               <div className="my-2">
-                <button className="btn btn-danger" onClick={() => deleteAccount()}>
-                  <i className="fas fa-user-minus" /> Delete My Account
-                </button>
+                  <div className="d-flex flex-column align-items-center gap-3 twoFABox">
+                    <button id="enable2FAButton" className="btn btn-success"  onClick={() => twoFAEnable()}>
+                      UPDATE/ENABLE 2FA
+                    </button>
+                    {showTwoFAForm && (
+                      <div id="twoFAFormHolder" className="d-flex flex-column align-items-center gap-3">
+                        <img id="qrImage" alt="QR code" src={profile.twoFA.qrImage} height="150" width="150" />
+                        <form id="twoFAUpdateForm" className="d-flex flex-column gap-2 form" onSubmit={onSubmit}>
+                          <input
+                            type="text"
+                            name="code"
+                            placeholder="2 FA Code" value={code}
+                            onChange={onChange}
+                            className="form-control"/>
+                          <button className="btn btn-primary" type='submit'>SET</button>
+                        </form>
+                      </div>
+                      )}
+                  </div>
+                  <div>
+                    <button className="btn btn-danger" onClick={() => deleteAccount()}>
+                      <i className="fas fa-user-minus" /> Delete My Account
+                    </button>
+                  </div>
               </div>
             )}
         </Fragment>
@@ -102,6 +113,7 @@ export default Profile;
 Profile.propTypes = {
   getProfileById: PropTypes.func.isRequired,
   twoFAEnable: PropTypes.func.isRequired,
+  settwoFA : PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   addFollower: PropTypes.func.isRequired,
@@ -114,4 +126,4 @@ const mapStateToProps = (state) => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { getProfileById,twoFAEnable, addFollower, UnFollow, deleteAccount })(Profile);
+export default connect(mapStateToProps, { getProfileById,twoFAEnable, settwoFA, addFollower, UnFollow, deleteAccount })(Profile);

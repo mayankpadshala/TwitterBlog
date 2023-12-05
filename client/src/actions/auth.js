@@ -24,12 +24,11 @@ export const loadUser = () => async (dispatch) => {
     //const res = await api.get('/auth');
     axios.get("http://localhost:5000/getuser", { withCredentials: true }).then((res) => {
              if (res.data) {
-              console.log(JSON.stringify(res.data))
+              //console.log(JSON.stringify(res.data))
               dispatch({
                 type: USER_LOADED,
                 payload: res.data
               });
-                //setUserObject(res.data);
             }
         })
     // dispatch({
@@ -67,12 +66,12 @@ export const register = (formData) => async (dispatch) => {
 };
 
 // Login User
-export const login = (email, password) => async (dispatch) => {
-  const body = { email, password };
+export const login = (email, password, code, on2FARequested) => async (dispatch) => {
+  const body = { email, password, code };
 
   try {
     const res = await api.post('/auth', body);
-
+    
     dispatch({
       type: LOGIN_SUCCESS,
       payload: res.data
@@ -81,10 +80,15 @@ export const login = (email, password) => async (dispatch) => {
     dispatch(loadUser());
   } catch (err) {
     const errors = err.response.data.errors;
-
     if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+      errors.forEach((error) => {
+      dispatch(setAlert(error.msg, 'danger'))
+      if(error.msg === "2FA Code Requested"){
+        on2FARequested(true);
+      };
+      });
     }
+
 
     dispatch({
       type: LOGIN_FAIL

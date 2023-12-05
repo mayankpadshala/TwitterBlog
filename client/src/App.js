@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
-import Landing from './components/layout/Landing';
+//import Landing from './components/layout/Landing';
 import Register from './components/auth/Register';
 import ForgotPassword from './components/auth/ForgotPassword';
 import ConfirmPassword from './components/auth/ConfirmPassword';

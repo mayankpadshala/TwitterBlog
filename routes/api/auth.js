@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 const { check, validationResult } = require('express-validator');
 const { logger } = require('../../logger');
-
+const { authenticator } = require("otplib");
 const User = require('../../models/User');
 
 // @route    GET api/auth
@@ -63,7 +63,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { email, password } = req.body;
+    const { email, password, code } = req.body;
 
     try {
       let user = await User.findOne({ email });
@@ -80,6 +80,18 @@ router.post(
         return res
           .status(400)
           .json({ errors: [{ msg: 'Invalid Credentials' }] });
+      }
+
+      if (user.twoFA.enabled) {
+        if (!code)
+          return res
+          .status(400)
+          .json({ errors: [{ msg: '2FA Code Requested' }] });
+          // return res.json({
+          //   codeRequested: true,
+          // });
+        const verified = authenticator.check(code, user["twoFA"].secret);
+        if (!verified) throw false;
       }
 
       const payload = {

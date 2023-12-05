@@ -17,6 +17,7 @@ const User = require('./models/User');
 const app = express();
 const qrcode = require("qrcode");
 const { authenticator } = require("otplib");
+const auth = require('./middleware/auth');
 // Connect Database
 connectDB();
 
@@ -187,7 +188,7 @@ app.get('/auth/github/callback',
   });
 
 app.get("/getuser", (req, res) => {
-  console.log("getuserData"+JSON.stringify(req.user));
+  //console.log("getuserData"+JSON.stringify(req.user));
   res.send(req.user);
 })
 
@@ -208,72 +209,51 @@ app.get("/auth/logout", (req, res) => {
 })
 
 // generater QR Image
-app.get("/api/qrImage", async (req, res) => {
+app.get("/api/qrImage",auth, async (req, res) => {
   try {
     //console.log("reqUserIdtrace:", req.user._id);
     //const { id } = req.cookies;
     //console.log("idtrace:", id);
     const user = await User.findById(req.user._id);
-    console.log("usertrace:", user);
     const secret = authenticator.generateSecret();
-    console.log("Secrettrace:", secret);
-    const uri = authenticator.keyuri(user._id, "2FA", secret);
-    console.log("uritrace:", uri);
+    const uri = authenticator.keyuri(user._id, "Micrblab", secret);
     const image = await qrcode.toDataURL(uri);
-    console.log("imagetrace:", image);
     user["twoFA"].tempSecret = secret;
+    user["twoFA"].qrImage = image;
     await user.save();
-    console.log("user after save:", user)
-    try {
-      const profile = await User.findById(req.user._id);
-      console.log("profiletrace = ",profile)
-      if (!profile) {
-        return res.status(400).json({ msg: 'There is no profile for this user' });
-      }
-      logger.info('get profile me');
-      //profile.image=image;
-      user["twoFA"].qrImage = image;
-      await user.save();
-      return res.json(
-       profile,
-      );
-        //res.json(profile);
-    } catch (err) {
-      console.error(err.message);}
-    // return res.send({
-    //   success: true,
-    //   image,
-    // });
-  } catch {
-    return res.status(500).send({
-      success: false,
-    });
+    return res.json(user);
+  } 
+  catch(err) {
+      console.log(err.message);
+        return res.status(500).send({
+          success: false,
+        });
   }
 });
 
 // set the 2 FA
-app.get("/set2FA", async (req, res) => {
+app.put("/api/set2FA", auth, async (req, res) => {
   try {
     //const { id } = req.cookies;
     //const { code } = req.query;
     const user = await User.findById(req.user._id);
-    const { tempSecret } = user["2FA"];
-
+    console.log("user==>"+JSON.stringify(user))
+    const tempSecret= user["twoFA"].tempSecret;
+    const { code } = req.body;
     const verified = authenticator.check(code, tempSecret);
     if (!verified) throw false;
 
-    user["2FA"] = {
+    user["twoFA"] = {
       enabled: true,
       secret: tempSecret,
+      qrImage: null
     };
     await user.save();
-    return res.send({
-      success: true,
-    });
-  } catch {
-    return res.status(500).send({
-      success: false,
-    });
+    return res.json(user);
+  } catch(err) {
+    console.error(err.message);
+    logger.error('post user-err'+err.message);
+    res.status(500).send('Server error');
   }
 });
 

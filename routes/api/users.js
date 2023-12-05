@@ -275,16 +275,20 @@ router.post('/profile', auth ,
     profileFields.social = socialFields;
     console.log(req.user);
     try {
-      // Using upsert option (creates new doc if no match is found):
-      let newprofile = await User.findOneAndUpdate(
-        { _id: mongoose.Types.ObjectId(req.user._id) },
-        { $set: profileFields },
-        { new: true, setDefaultsOnInsert: true }
-      );
-      console.log(newprofile);
-      //const profile = await newprofile.save();
+      const filter = { _id: mongoose.Types.ObjectId(req.user._id) };
+      const update = {
+          $set: profileFields
+      };
+      // let newprofile = await User.findOneAndUpdate(
+      //   { _id: mongoose.Types.ObjectId(req.user._id) },
+      //   { $set: profileFields },
+      //   { new: true, setDefaultsOnInsert: true }
+      // );
+      const updatedprofile = await User.updateOne(filter, update);
+      const profile = await User.findById(req.user._id);
+      console.log(profile);
       logger.info('post profile');
-      return res.json(newprofile);
+      return res.json(profile);
     } catch (err) {
       console.error(err.message);
       logger.error('post profile-err'+err.message);
@@ -406,7 +410,7 @@ router.put('/sendcode' , async (req, res) => {
       await sendEmail({ recipient_email : req.body.email, OTP : req.body.otp})
       return res
           .status(200)
-          .json({ errors: [{ msg: 'Code Sent' }] });
+          .json({ Info: [{ msg: 'Code Sent' }] });
     }else{
       return res
           .status(400)

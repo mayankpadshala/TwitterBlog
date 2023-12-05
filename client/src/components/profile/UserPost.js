@@ -9,7 +9,7 @@ const Posts = ({ getPostsById, post: { posts } }) => {
   const { id } = useParams();
   useEffect(() => {
     getPostsById(id);
-  }, [getPostsById]);
+  }, [getPostsById, id]);
 
   return (
     <section className="">

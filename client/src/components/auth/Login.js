@@ -10,28 +10,29 @@ import twitterImage from '../../assets/twitterImage.png';
 const Login = ({ login, isAuthenticated }) => {
   const [formData, setFormData] = useState({
     email: '',
-    password: ''
+    password: '', code:''
   });
   const googleLogin = () => {
     window.open("http://localhost:5000/auth/google", "_self");
-}
+  }
 
-const githubLogin = () => {
-    window.open("http://localhost:5000/auth/github", "_self");
-}
+  const githubLogin = () => {
+      window.open("http://localhost:5000/auth/github", "_self");
+  }
 
-const twitterLogin = () => {
-    window.location.href = "http://localhost:5000/auth/twitter"
-}
+  const twitterLogin = () => {
+      window.location.href = "http://localhost:5000/auth/twitter"
+  }
+  const [show2FAInput, setShow2FAInput] = useState(false);
 
-  const { email, password } = formData;
+  const { email, password, code } = formData;
 
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const onSubmit = (e) => {
     e.preventDefault();
-    login(email, password);
+    login(email, password, code,  () => setShow2FAInput(true));
   };
 
   if (isAuthenticated) {
@@ -64,6 +65,21 @@ const twitterLogin = () => {
             minLength="6"
           />
         </div>
+        {
+          show2FAInput && (
+            <div className="form-group">
+              <input
+                type="text"
+                placeholder="2 FA code"
+                name="code"
+                value={code}
+                onChange={onChange}
+                minLength="6"
+              />
+            </div>
+          )
+        }
+
         <input type="submit" className="btn btn-primary" value="Login" />
       </form>
       <p className="forgotPassword">

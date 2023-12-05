@@ -1,6 +1,6 @@
 /* Global Styles */
 :root {
-  --primary-color: cadetblue;
+  --primary-color: #5b6671;
   --dark-color: #343a40;
   --light-color: #f4f4f4;
   --danger-color: #dc3545;
@@ -324,7 +324,7 @@ button {
 }
 
 .navbar a:hover {
-  color: var(--primary-color);
+  opacity: 0.8;/*color: var(--primary-color);*/
 }
 
 .navbar .welcome span {
@@ -704,9 +704,6 @@ li,
 a {
     font-family: "Poppins", sans-serif;
 }
-#twoFAFormHolder {
-  display: none !important;
-}
 
 .ready #twoFAFormHolder {
   display: flex !important;
@@ -719,7 +716,9 @@ a {
 #loginForm.codeRequested .code{
   display: block;
 }
-
+.twoFABox{
+  float: left;
+}
 .searchbox{
   display: block;
   width: 30%;

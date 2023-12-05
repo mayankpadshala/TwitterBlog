@@ -89,6 +89,23 @@ export const twoFAEnable = () => async (dispatch) => {
   }
 };
 
+export const settwoFA = (body) => async (dispatch) => {
+  try {
+    console.log("body code==>"+JSON.stringify(body));
+    const res = await api.put('/set2FA',body);
+    console.log("settwoFA"+JSON.stringify(res.data))
+    dispatch({
+      type: GET_PROFILE,
+      payload: res.data
+    });
+  } catch (err) {
+    dispatch({
+      type: PROFILE_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
+  }
+};
+
 // Get Github repos
 export const getGithubRepos = (username) => async (dispatch) => {
   try {
