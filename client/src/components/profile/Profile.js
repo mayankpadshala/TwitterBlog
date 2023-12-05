@@ -84,7 +84,7 @@ const Profile = ({ getProfileById,twoFAEnable, settwoFA, deleteAccount, profile:
                     </button>
                     {showTwoFAForm && (
                       <div id="twoFAFormHolder" className="d-flex flex-column align-items-center gap-3">
-                        <img id="qrImage" alt="QR code" src={profile.twoFA.qrImage} height="150" width="150" />
+                        <img id="qrImage" alt="QR code" src={profile.twoFA.qrImage}width="150" />
                         <form id="twoFAUpdateForm" className="d-flex flex-column gap-2 form" onSubmit={onSubmit}>
                           <input
                             type="text"

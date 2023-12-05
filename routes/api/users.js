@@ -404,7 +404,7 @@ function sendEmail({ recipient_email, OTP }) {
 
 router.put('/sendcode' , async (req, res) => {
   try {
-    let user = await User.findOne({ email });
+    let user = await User.findOne({ "email" : req.body.email });
 
     if (user) {
       await sendEmail({ recipient_email : req.body.email, OTP : req.body.otp})
@@ -453,7 +453,6 @@ router.put('/resetpassword',
         }
       };
 
-      console.log(user)
       jwt.sign(
         payload,
         config.get('jwtSecret'),

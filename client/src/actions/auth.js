@@ -130,6 +130,7 @@ export const sendPasswordResetEmail = (email, otp) => async (dispatch) => {
       type: REGISTER_FAIL,
       payload: res.data
     });
+    dispatch(setAlert('Email Sent', 'success'));
   } catch (err) {
     const errors = err.response.data.errors;
 

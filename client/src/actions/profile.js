@@ -77,7 +77,6 @@ export const twoFAEnable = () => async (dispatch) => {
     const res = await api.get(`/qrImage`);
     console.log("qrimage"+JSON.stringify(res.data))
     dispatch({
-
       type: GET_PROFILE,
       payload: res.data
     });
@@ -91,13 +90,13 @@ export const twoFAEnable = () => async (dispatch) => {
 
 export const settwoFA = (body) => async (dispatch) => {
   try {
-    console.log("body code==>"+JSON.stringify(body));
     const res = await api.put('/set2FA',body);
-    console.log("settwoFA"+JSON.stringify(res.data))
+    
     dispatch({
       type: GET_PROFILE,
       payload: res.data
     });
+    dispatch(setAlert('Updated/Enabled 2 FA', 'success'));
   } catch (err) {
     dispatch({
       type: PROFILE_ERROR,

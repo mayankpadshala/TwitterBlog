@@ -21,7 +21,7 @@ const ForgotPassword = ({ sendPasswordResetEmail }) => {
   
   const onSubmit2 = async (e) => {
     e.preventDefault();
-    if(writecode === otp){
+    if(writecode == otp){
       navigate("/confirmPassword", { state : {email: email}});
     }
   };
