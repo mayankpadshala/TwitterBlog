@@ -98,6 +98,7 @@ router.post('/',
       const salt = await bcrypt.genSalt(10);
 
       user.password = await bcrypt.hash(password, salt);
+      user.role = "user"; 
 
       await user.save();
 
@@ -273,7 +274,6 @@ router.post('/profile', auth ,
     }
     // add to profileFields
     profileFields.social = socialFields;
-    console.log(req.user);
     try {
       const filter = { _id: mongoose.Types.ObjectId(req.user._id) };
       const update = {
@@ -284,9 +284,9 @@ router.post('/profile', auth ,
       //   { $set: profileFields },
       //   { new: true, setDefaultsOnInsert: true }
       // );
-      const updatedprofile = await User.updateOne(filter, update);
+      await User.updateOne(filter, update);
       const profile = await User.findById(req.user._id);
-      console.log(profile);
+      console.log("id==>"+req.user._id);
       logger.info('post profile');
       return res.json(profile);
     } catch (err) {
