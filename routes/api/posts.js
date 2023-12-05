@@ -68,6 +68,27 @@ router.post('/', auth,
  */
 
 router.get('/',auth, async (req, res) => {
+  const profile = await User.findById(req.user._id);
+  if(profile.role==="admin"){
+    try {
+      // Try to get cached posts from Redis
+      const cachedPosts = await redisClient.get(redisKey);
+      if (cachedPosts) {
+          // If posts are in the cache, parse and return them
+          return res.json(JSON.parse(cachedPosts));
+      } else {
+          // If not in cache, fetch from database
+          const user = await User.findById(req.user._id);
+          const followingUser = user.following;
+          const posts = await Post.find().sort({ date: -1 }).populate('likes')
+                                                            .populate('comments');
+      }
+    }
+    catch (err) {
+      console.error(err);
+      res.status(500).send('Server Error');
+  }
+  }
   const redisKey = `posts-user-${req.user._id}`; // Unique Redis key for each user's posts
 
     try {
@@ -211,9 +232,9 @@ router.delete('/:id',auth, [ checkObjectId('id')], async (req, res) => {
     if (!post) {
       return res.status(404).json({ msg: 'Post not found' });
     }
-
     // Check user
-    if (post.user.toString() !== req.user._id) {
+    if (post.user.toString() !== req.user._id.toString()) {
+      
       return res.status(401).json({ msg: 'User not authorized' });
     }
 

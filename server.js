@@ -91,6 +91,7 @@ passport.use(new GoogleStrategy({
         console.log(profile);
         const newUser = new User({
           googleId: profile.id,
+          role:"user",
           name: profile.displayName,
           avatar: "https://www.shutterstock.com/image-vector/user-icon-trendy-flat-style-600nw-1467725033.jpg"
         });
@@ -122,6 +123,7 @@ function (request, accessToken, refreshToken, profile, done) {
         // }
         const newUser = new User({
           twitterId: profile.id,
+          role:"user",
           name: profile.displayName,
           avatar: "https://www.shutterstock.com/image-vector/user-icon-trendy-flat-style-600nw-1467725033.jpg"
         });
@@ -149,6 +151,7 @@ function (request, accessToken, refreshToken, profile, done) {
         
         const newUser = new User({
           githubId: profile.id,
+          role: "user",
           name: profile.displayName,
           avatar: "https://www.shutterstock.com/image-vector/user-icon-trendy-flat-style-600nw-1467725033.jpg"
         });
