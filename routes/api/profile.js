@@ -30,10 +30,10 @@ const Post = require('../../models/Post');
  *       500:
  *         description: Server error.
  */
-router.get('/me', auth, async (req, res) => {
+router.get('/me' , async (req, res) => {
   try {
     const profile = await Profile.findOne({
-      user: req.user.id
+      user: req.user._id
     }).populate('user', ['name', 'avatar']);
 
     if (!profile) {
@@ -106,7 +106,7 @@ router.post(
 
     // build a profile
     const profileFields = {
-      user: req.user.id,
+      user: req.user._id,
       website:
         website && website !== ''
           ? normalize(website, { forceHttps: true })
@@ -131,7 +131,7 @@ router.post(
     try {
       // Using upsert option (creates new doc if no match is found):
       let profile = await Profile.findOneAndUpdate(
-        { user: req.user.id },
+        { user: req.user._id },
         { $set: profileFields },
         { new: true, upsert: true, setDefaultsOnInsert: true }
       );
@@ -235,15 +235,15 @@ router.get(
  *       500:
  *         description: Server error.
  */
-router.delete('/', auth, async (req, res) => {
+router.delete('/' , async (req, res) => {
   try {
     // Remove user posts
     // Remove profile
     // Remove user
     await Promise.all([
-      Post.deleteMany({ user: req.user.id }),
-      Profile.findOneAndRemove({ user: req.user.id }),
-      User.findOneAndRemove({ _id: req.user.id })
+      Post.deleteMany({ user: req.user._id }),
+      Profile.findOneAndRemove({ user: req.user._id }),
+      User.findOneAndRemove({ _id: req.user._id })
     ]);
     logger.info('user deleted');
     res.json({ msg: 'User deleted' });
@@ -258,16 +258,16 @@ router.delete('/', auth, async (req, res) => {
 // @route    PUT api/profile/follow/:id
 // @desc     User click follow on id's profile then user Added in id's follower and id added in user's following
 // @access   Private
-router.put('/follow/:id', auth, checkObjectId('id'), async (req, res) => {
+router.put('/follow/:id' , checkObjectId('id'), async (req, res) => {
   try {
     const profile = await Profile.findById(req.params.id).populate('user', ['name', 'avatar']);
-    const userid = await Profile.find({"user" : req.user.id});
+    const userid = await Profile.find({"user" : req.user._id});
     
     // Check if the user has already been followed
-    // if (post.likes.some((like) => like.user.toString() === req.user.id)) {
+    // if (post.likes.some((like) => like.user.toString() === req.user._id)) {
     //   return res.status(400).json({ msg: 'Post already liked' });
     // }
-    profile.followers.unshift({ user: req.user.id });
+    profile.followers.unshift({ user: req.user._id });
     userid[0].following.unshift({ user: profile.user });
 
     await profile.save();
@@ -285,15 +285,15 @@ router.put('/follow/:id', auth, checkObjectId('id'), async (req, res) => {
 // @route    PUT api/profile/unfollow/:id
 // @desc     unfollow a post
 // @access   Private
-router.put('/unfollow/:id', auth, checkObjectId('id'), async (req, res) => {
+router.put('/unfollow/:id' , checkObjectId('id'), async (req, res) => {
   try {
     const profile = await Profile.findById(req.params.id).populate('user', ['name', 'avatar']);
-    const userid = await Profile.find({"user" : req.user.id});
+    const userid = await Profile.find({"user" : req.user._id});
     
 
     // remove the follower
     profile.followers = profile.followers.filter(
-      ({ user }) => user.toString() !== req.user.id
+      ({ user }) => user.toString() !== req.user._id
     );
     // remove following
     userid[0].following = userid[0].following.filter(

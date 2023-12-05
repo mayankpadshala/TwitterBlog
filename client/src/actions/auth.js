@@ -1,4 +1,5 @@
 import api from '../utils/api';
+import axios from 'axios';
 import { setAlert } from './alert';
 import {
   REGISTER_SUCCESS,
@@ -20,12 +21,20 @@ import {
 // Load User
 export const loadUser = () => async (dispatch) => {
   try {
-    const res = await api.get('/auth');
-
-    dispatch({
-      type: USER_LOADED,
-      payload: res.data
-    });
+    //const res = await api.get('/auth');
+    axios.get("http://localhost:5000/getuser", { withCredentials: true }).then((res) => {
+             if (res.data) {
+              //console.log(JSON.stringify(res.data))
+              dispatch({
+                type: USER_LOADED,
+                payload: res.data
+              });
+            }
+        })
+    // dispatch({
+    //   type: USER_LOADED,
+    //   payload: res.data
+    // });
   } catch (err) {
     dispatch({
       type: AUTH_ERROR
@@ -57,12 +66,12 @@ export const register = (formData) => async (dispatch) => {
 };
 
 // Login User
-export const login = (email, password) => async (dispatch) => {
-  const body = { email, password };
+export const login = (email, password, code, on2FARequested) => async (dispatch) => {
+  const body = { email, password, code };
 
   try {
     const res = await api.post('/auth', body);
-
+    
     dispatch({
       type: LOGIN_SUCCESS,
       payload: res.data
@@ -71,10 +80,15 @@ export const login = (email, password) => async (dispatch) => {
     dispatch(loadUser());
   } catch (err) {
     const errors = err.response.data.errors;
-
     if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+      errors.forEach((error) => {
+      dispatch(setAlert(error.msg, 'danger'))
+      if(error.msg === "2FA Code Requested"){
+        on2FARequested(true);
+      };
+      });
     }
+
 
     dispatch({
       type: LOGIN_FAIL
@@ -83,4 +97,71 @@ export const login = (email, password) => async (dispatch) => {
 };
 
 // Logout
-export const logout = () => ({ type: LOGOUT });
+export const logout = () => async (dispatch) => {
+  try {
+    axios.get("http://localhost:5000/auth/logout", { withCredentials: true }).then((res) => {
+             if (res.data) {
+              dispatch({
+                type: LOGOUT
+              });
+                //setUserObject(res.data);
+            }
+        })
+  } catch (err) {
+    const errors = err.response.data.errors;
+
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+
+    dispatch({
+      type: LOGOUT
+    });
+  }
+};
+
+// sendPasswordResetEmail
+export const sendPasswordResetEmail = (email, otp) => async (dispatch) => {
+  try {
+    const body = {email, otp};
+    const res = await api.put('/users/sendcode', body);
+
+    dispatch({
+      type: REGISTER_FAIL,
+      payload: res.data
+    });
+    dispatch(setAlert('Email Sent', 'success'));
+  } catch (err) {
+    const errors = err.response.data.errors;
+
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+
+    dispatch({
+      type: REGISTER_FAIL
+    });
+  }
+};
+
+export const newPassword = (body) => async (dispatch) => {
+    try {
+      const res = await api.put('/users/resetpassword', body);
+  
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: res.data
+      });
+      dispatch(loadUser());
+    } catch (err) {
+      const errors = err.response.data.errors;
+  
+      if (errors) {
+        errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+      }
+  
+      dispatch({
+        type: LOGIN_FAIL
+      });
+    }
+};
