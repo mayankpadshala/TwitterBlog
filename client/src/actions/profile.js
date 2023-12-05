@@ -8,8 +8,8 @@ import {
   UPDATE_PROFILE,
   CLEAR_PROFILE,
   ACCOUNT_DELETED,
-  GET_REPOS,
-  NO_REPOS,
+  GET_REPOS, 
+  NO_REPOS, DELETE_USER
 } from './types';
 
 /*
@@ -280,6 +280,27 @@ export const deleteAccount = () => async (dispatch) => {
       dispatch({ type: ACCOUNT_DELETED });
 
       dispatch(setAlert('Your account has been permanently deleted'));
+    } catch (err) {
+      dispatch({
+        type: PROFILE_ERROR,
+        payload: { msg: err.response.statusText, status: err.response.status }
+      });
+    }
+  }
+};
+
+// Delete account
+export const deleteUser = (id) => async (dispatch) => {
+  if (window.confirm('Are you sure? This can NOT be undone!')) {
+    try {
+      await api.delete(`/profile/${id}`);
+
+      dispatch({
+        type: DELETE_USER,
+        payload: id
+      });
+
+      dispatch(setAlert('Account has been permanently deleted'));
     } catch (err) {
       dispatch({
         type: PROFILE_ERROR,

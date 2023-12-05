@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { addFollower, UnFollow } from '../../actions/profile';
+import { addFollower, UnFollow, deleteUser } from '../../actions/profile';
 
 const ProfileItem = ({
   profile: {
@@ -11,7 +11,7 @@ const ProfileItem = ({
     bio,
     followers,
     location,
-  }, auth, addFollower, UnFollow
+  }, auth, addFollower, UnFollow, deleteUser
 }) => {
   return (
     <div className='profile bg-light'>
@@ -49,6 +49,15 @@ const ProfileItem = ({
             <ul><Link to={`/profile/${_id}`} className='btn btn-primary'>
                 View Profile
               </Link>
+              {!auth.loading &&  auth.user.role === 'admin' && (
+                <button
+                  onClick={() => deleteUser(_id)}
+                  type="button"
+                  className="btn btn-danger"
+                >
+                  <i className="fas fa-times" />
+                </button>
+              )}
             </ul>
     </div>
   );
@@ -58,10 +67,11 @@ ProfileItem.propTypes = {
   profile: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   addFollower: PropTypes.func.isRequired,
-  UnFollow : PropTypes.func.isRequired
+  UnFollow : PropTypes.func.isRequired,
+  deleteUser : PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth
 });
-export default React.memo(connect(mapStateToProps, { addFollower, UnFollow })(ProfileItem));
+export default React.memo(connect(mapStateToProps, { addFollower, UnFollow, deleteUser })(ProfileItem));

@@ -5,7 +5,7 @@ import {
   UPDATE_PROFILE,
   GET_PROFILES,
   GET_REPOS,
-  NO_REPOS
+  NO_REPOS, DELETE_USER
 } from '../actions/types';
 
 const initialState = {
@@ -39,6 +39,12 @@ function profileReducer(state = initialState, action) {
         error: payload,
         loading: false,
         profile: null
+      };
+    case DELETE_USER:
+      return {
+        ...state,
+        profiles: state.profiles.filter((profile) => profile._id !== payload),
+        loading: false
       };
     case CLEAR_PROFILE:
       return {

@@ -332,7 +332,7 @@ router.put('/unfollow/:id' ,auth , checkObjectId('id'), async (req, res) => {
       ({ user }) => user.toString() !== req.user._id
     );
     // remove following
-    userid.following = userid[0].following.filter(
+    userid.following = userid.following.filter(
       ({ user }) => user.toString() !== Unfollowprofile.user
     );
 

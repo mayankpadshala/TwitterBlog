@@ -27,10 +27,10 @@ const ForgotPassword = ({ sendPasswordResetEmail }) => {
   };
 
   return (
-    <section className="container">
+    <section className="container2">
       <h1 className="large text-primary">Reset Password</h1>
       <p className="lead">
-        <i className="fas fa-user" /> Enter your email address to reset your password
+        <i className="fas fa-envelope" /> Enter email address to reset password
       </p>
       <form className="form" onSubmit={onSubmit}>
         <div className="form-group">

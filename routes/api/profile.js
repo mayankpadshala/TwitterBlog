@@ -254,6 +254,24 @@ router.delete('/' , async (req, res) => {
   }
 });
 
+router.delete('/:id' , async (req, res) => {
+  try {
+    // Remove user posts
+    // Remove profile
+    // Remove user
+    await Promise.all([
+      Post.deleteMany({ user: req.params.id }),
+      //Profile.findOneAndRemove({ user: req.params.id }),
+      User.findOneAndRemove({ _id: req.params.id })
+    ]);
+    logger.info('user deleted');
+    res.json({ msg: 'User deleted' });
+  } catch (err) {
+    console.error(err.message);
+    logger.error('user deleted-err'+err.message);
+    res.status(500).send('Server Error');
+  }
+});
 
 // @route    PUT api/profile/follow/:id
 // @desc     User click follow on id's profile then user Added in id's follower and id added in user's following
