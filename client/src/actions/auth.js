@@ -100,13 +100,11 @@ export const login = (email, password, code, on2FARequested) => async (dispatch)
 export const logout = () => async (dispatch) => {
   try {
     axios.get("http://localhost:5000/auth/logout", { withCredentials: true }).then((res) => {
-             if (res.data) {
-              dispatch({
-                type: LOGOUT
-              });
-                //setUserObject(res.data);
-            }
+             
         })
+        dispatch({
+          type: LOGOUT
+        });
   } catch (err) {
     const errors = err.response.data.errors;
 

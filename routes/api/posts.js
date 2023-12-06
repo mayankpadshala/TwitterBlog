@@ -68,51 +68,48 @@ router.post('/', auth,
  */
 
 router.get('/',auth, async (req, res) => {
-  const profile = await User.findById(req.user._id);
-  if(profile.role==="admin"){
-    try {
-      // Try to get cached posts from Redis
+  try {
+    const redisKey = `posts-user-${req.user._id}`; // Unique Redis key for each user's posts
+
+    const user = await User.findById(req.user._id);
+    
+    if(user.role == "admin"){
+      
       const cachedPosts = await redisClient.get(redisKey);
       if (cachedPosts) {
-          // If posts are in the cache, parse and return them
           return res.json(JSON.parse(cachedPosts));
       } else {
-          // If not in cache, fetch from database
-          const user = await User.findById(req.user._id);
-          const followingUser = user.following;
-          const posts = await Post.find().sort({ date: -1 }).populate('likes')
-                                                            .populate('comments');
+          const posts = await Post.find().sort({ date: -1 });
+          res.json(posts);
       }
     }
-    catch (err) {
-      console.error(err);
-      res.status(500).send('Server Error');
-  }
-  }
-  const redisKey = `posts-user-${req.user._id}`; // Unique Redis key for each user's posts
-
-    try {
-        // Try to get cached posts from Redis
-        const cachedPosts = await redisClient.get(redisKey);
-        if (cachedPosts) {
-            // If posts are in the cache, parse and return them
-            return res.json(JSON.parse(cachedPosts));
-        } else {
-            // If not in cache, fetch from database
+    else{
+        
+        // const cachedPosts = await redisClient.get(redisKey);
+        // if (cachedPosts) {
+        //     return res.json(JSON.parse(cachedPosts));
+        // } else {
             const user = await User.findById(req.user._id);
             const followingUser = user.following;
             const posts = await Post.find().sort({ date: -1 }).populate('likes')
                                                               .populate('comments');
             
-            // Filter posts as before
-            const followingUserIds = followingUser.map(fu => fu.user);
-            const filteredPosts = posts.filter(post => followingUserIds.includes(post.user));
+            console.log("followingUser==>")
+            console.log(followingUser.length)
+            if(followingUser.length > 0){
+              const followingUserIds = followingUser.map(fu => fu.user);
+              const filteredPosts = posts.filter(post => followingUserIds.includes(post.user));
 
-            // Cache the posts in Redis with a TTL (e.g., 1 hour = 3600 seconds)
-            await redisClient.setEx(redisKey, 3600, JSON.stringify(posts));
+              // Cache the posts in Redis with a TTL (e.g., 1 hour = 3600 seconds)
+              await redisClient.setEx(redisKey, 3600, JSON.stringify(posts));
 
-            res.json(filteredPosts);
+              res.json(filteredPosts);
+            }
+            else{
+              res.json({});
+            }
         }
+      //}
     } catch (err) {
         console.error(err);
         res.status(500).send('Server Error');
@@ -148,7 +145,7 @@ router.get('/',auth, async (req, res) => {
  */
 router.get('/user/:id', auth, async (req, res) => {
   try {
-    const posts = await Post.find({"user" : req.user._id}).sort({ date: -1 });
+    const posts = await Post.find({"user" : req.params.id}).sort({ date: -1 });
     logger.info('get posts');
     res.json(posts);
   } catch (err) {
@@ -233,7 +230,9 @@ router.delete('/:id',auth, [ checkObjectId('id')], async (req, res) => {
       return res.status(404).json({ msg: 'Post not found' });
     }
     // Check user
-    if (post.user.toString() !== req.user._id.toString()) {
+    const user = await User.findById(req.user._id);
+    
+    if (post.user.toString() !== req.user._id.toString() && user.role != "admin") {
       
       return res.status(401).json({ msg: 'User not authorized' });
     }
