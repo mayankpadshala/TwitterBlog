@@ -37,7 +37,7 @@ COPY --from=react-build /app/client/build /node/public
 COPY . /node/
 
 # Expose the port the Node.js app will run on
-EXPOSE 3000
+EXPOSE 5000 3000
 
 # Define the command to run the Node.js/Express server
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]
