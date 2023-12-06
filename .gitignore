@@ -5,4 +5,4 @@ client/build
 client/.eslintcache
 combined.log
 error.log
-
+.env

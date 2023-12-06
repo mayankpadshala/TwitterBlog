@@ -31,6 +31,8 @@ router.get('/', auth, async (req, res) => {
  * @swagger
  * /auth:
  *   post:
+ *     tags:
+ *      - Users
  *     summary: User login
  *     description: This route logs in a user.
  *     requestBody:

@@ -21,6 +21,8 @@ const checkObjectId = require('../../middleware/checkObjectId');
  * @swagger
  * /users:
  *   post:
+ *     tags: 
+ *       - Users
  *     summary: Register user
  *     description: Register a new user in the application.
  *     requestBody:
@@ -183,13 +185,15 @@ router.get('/me' ,auth , async (req, res) => {
 // @access   Public
 /**
  * @swagger
- * /profile:
+ * /users:
  *   get:
- *     summary: Get all profiles
- *     description: Retrieve all user profiles.
+ *     tags:
+ *       - Users
+ *     summary: Get all users
+ *     description: Retrieve all user.
  *     responses:
  *       200:
- *         description: List of all user profiles.
+ *         description: List of all user.
  *       500:
  *         description: Server error.
  */
@@ -210,12 +214,14 @@ router.get('/',auth , async (req, res) => {
 // @access   Private
 /**
  * @swagger
- * /profile:
+ * /users/profile:
  *   post:
+ *     tags:
+ *       - Users
  *     security:
- *       - BearerAuth: []
- *     summary: Create or update user profile
- *     description: Create or update the profile of the logged-in user.
+ *       - ApiKeyAuth: []
+ *     summary: Update user 
+ *     description: Update the logged-in user.
  *     requestBody:
  *       required: true
  *       content:
@@ -223,11 +229,17 @@ router.get('/',auth , async (req, res) => {
  *           schema:
  *             type: object
  *             properties:
+ *               bio:
+ *                 type: string
+ *               location:
+ *                 type: string
  *               twitter:
  *                 type: string
  *               linkedin:
  *                 type: string
- *               location:
+ *               facebook:
+ *                 type: string
+ *               instagram:
  *                 type: string
  *    
  *     responses:

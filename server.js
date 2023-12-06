@@ -37,8 +37,7 @@ connectDB();
 // app.use(cookieParser());
 
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:3000", credentials: true, "Access-Control-Allow-Origin": "http://localhost:3000"
-}));
+app.use(cors({ origin: `${config.UIUrl}`, credentials: true, "Access-Control-Allow-Origin": `${config.UIUrl}` }));
 
 // Define Routes
 
@@ -55,7 +54,7 @@ app.use(passport.session());
 
 
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument)); 
+
 app.use(morganMiddleware);
 
 app.use('/api/users', require('./routes/api/users'));
@@ -63,6 +62,8 @@ app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/profile', require('./routes/api/profile'));
 app.use('/api/posts', require('./routes/api/posts'));
 app.use('/api/upload', require('./routes/api/upload'));
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument)); 
 
 
 passport.serializeUser((user, done) => {
@@ -164,27 +165,27 @@ function (request, accessToken, refreshToken, profile, done) {
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }));
 
 app.get('/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: 'http://localhost:3000/login', session: true }),
+  passport.authenticate('google', { failureRedirect: `${config.UIUrl}/login`, session: true }),
   function (req, res) {
-    res.redirect('http://localhost:3000/posts');
+    res.redirect(`${config.UIUrl}/posts`);
   });
 
 
 app.get('/auth/twitter', passport.authenticate('twitter'));
 
 app.get('/auth/twitter/callback',
-  passport.authenticate('twitter', { failureRedirect: 'http://localhost:3000/login', session: true }),
+  passport.authenticate('twitter', { failureRedirect: `${config.UIUrl}/login`, session: true }),
   function (req, res) {
-    res.redirect('http://localhost:3000/posts');
+    res.redirect(`${config.UIUrl}/posts`);
   });
 
 
 app.get('/auth/github', passport.authenticate('github'));
 
 app.get('/auth/github/callback',
-  passport.authenticate('github', { failureRedirect: 'http://localhost:3000/login', session: true }),
+  passport.authenticate('github', { failureRedirect: `${config.UIUrl}/login`, session: true }),
   function (req, res) {
-    res.redirect('http://localhost:3000/posts');
+    res.redirect(`${config.UIUrl}/posts`);
   });
 
 app.get("/getuser", (req, res) => {
@@ -199,11 +200,11 @@ app.get("/auth/logout", (req, res) => {
         return next(err); 
       }
       req.session.destroy();
-      res.redirect('http://localhost:3000/');
+      res.redirect(`${config.UIUrl}/`);
     });
   } else {
     // Handle the case where there is no user to log out
-    res.redirect('http://localhost:3000/');
+    res.redirect(`${config.UIUrl}/`);
   }
 })
 
@@ -260,8 +261,10 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 
-app.listen(PORT, () => logger.info(`Server running on port ${PORT}`));
+app.listen(PORT, '0.0.0.0', function() {
+  console.log('Server is running on port 5000');
+});
 
 

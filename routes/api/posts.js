@@ -10,13 +10,42 @@ const checkObjectId = require('../../middleware/checkObjectId');
 const { createClient } = require('redis');
 const passport = require('passport');
 const redisClient = createClient({
-  url: 'redis://localhost:6379' // Replace with your Redis server's URL
+  url: process.env.REDIS_URL || 'redis://localhost:6379' // Replace with your Redis server's URL
+  // host: process.env.REDIS_HOST || '127.0.0.1',
+  // port: process.env.REDIS_PORT || 6379
 });
 redisClient.connect().catch(console.error);
 
 // @route    POST api/posts
 // @desc     Create a post
 // @access   Private
+/**
+ * @swagger
+ * /posts:
+ *   post:
+ *     tags:
+ *       - Posts
+ *     security:
+ *       - ApiKeyAuth: []
+ *     summary: create post
+ *     description: create post
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - text
+ *             properties:
+ *               text:
+ *                 text: string
+ *     responses:
+ *       200:
+ *         description: post created.
+ *       500:
+ *         description: Server error.
+ */
 router.post('/', auth,
   check('text', 'Text is required').notEmpty(),
   async (req, res) => {
@@ -56,8 +85,10 @@ router.post('/', auth,
  * @swagger
  * /posts:
  *   get:
+ *     tags: 
+ *       - Posts
  *     security:
- *       - BearerAuth: []
+ *       - ApiKeyAuth: []
  *     summary: Get posts
  *     description: Retrieve the posts of the current logged-in user's following user.
  *     responses:
@@ -85,10 +116,10 @@ router.get('/',auth, async (req, res) => {
     }
     else{
         
-        // const cachedPosts = await redisClient.get(redisKey);
-        // if (cachedPosts) {
-        //     return res.json(JSON.parse(cachedPosts));
-        // } else {
+        const cachedPosts = await redisClient.get(redisKey);
+        if (cachedPosts) {
+            return res.json(JSON.parse(cachedPosts));
+        } else {
             const user = await User.findById(req.user._id);
             const followingUser = user.following;
             const posts = await Post.find().sort({ date: -1 }).populate('likes')
@@ -110,7 +141,7 @@ router.get('/',auth, async (req, res) => {
               res.json({});
             }
         }
-      //}
+      }
     } catch (err) {
         console.error(err);
         res.status(500).send('Server Error');
@@ -121,29 +152,6 @@ router.get('/',auth, async (req, res) => {
 // @route    GET api/posts/:id
 // @desc     Get postsbyid
 // @access   Private
-/**
- * @swagger
- * /posts/{id}:
- *   get:
- *     security:
- *       - BearerAuth: []
- *     summary: Get posts of user
- *     description: Retrieve a user's posts.
- *     parameters:
- *       - in: path
- *         name: user_id
- *         required: true
- *         description: Unique ID of the user.
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: posts of the user.
- *       400:
- *         description: posts not found.
- *       500:
- *         description: Server error.
- */
 router.get('/user/:id', auth, async (req, res) => {
   try {
     const posts = await Post.find({"user" : req.params.id}).sort({ date: -1 });
@@ -163,8 +171,10 @@ router.get('/user/:id', auth, async (req, res) => {
  * @swagger
  * /posts/{id}:
  *   get:
+ *     tags: 
+ *       - Posts
  *     security:
- *       - BearerAuth: []
+ *       - ApiKeyAuth: []
  *     summary: Get posts by id
  *     description: Retrieve a user's posts by ID.
  *     parameters:
@@ -206,8 +216,10 @@ router.get('/:id',auth, checkObjectId('id'), async (req, res) => {
  * @swagger
  * /posts/{id}:
  *   delete:
+ *     tags: 
+ *       - Posts
  *     security:
- *       - BearerAuth: []
+ *       - ApiKeyAuth: []
  *     summary: delete post by id
  *     description: delete the post by id.
  *     parameters:
@@ -251,6 +263,29 @@ router.delete('/:id',auth, [ checkObjectId('id')], async (req, res) => {
 // @route    PUT api/posts/like/:id
 // @desc     Like a post
 // @access   Private
+/**
+ * @swagger
+ * /posts/like/{id}:
+ *   put:
+ *     tags:
+ *       - Posts
+ *     security:
+ *       - ApiKeyAuth: []
+ *     summary: like post by id
+ *     description: like the post by id.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Unique ID of the post.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: post liked.
+ *       500:
+ *         description: Server error.
+ */
 router.put('/like/:id',auth, checkObjectId('id'), async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
@@ -275,6 +310,29 @@ router.put('/like/:id',auth, checkObjectId('id'), async (req, res) => {
 // @route    PUT api/posts/unlike/:id
 // @desc     Unlike a post
 // @access   Private
+/**
+ * @swagger
+ * /posts/unlike/{id}:
+ *   put:
+ *     tags:
+ *       - Posts
+ *     security:
+ *       - ApiKeyAuth: []
+ *     summary: unlike post by id
+ *     description: unlike the post by id.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Unique ID of the post.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: post unliked.
+ *       500:
+ *         description: Server error.
+ */
 router.put('/unlike/:id',auth, checkObjectId('id'), async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
@@ -302,6 +360,40 @@ router.put('/unlike/:id',auth, checkObjectId('id'), async (req, res) => {
 // @route    POST api/posts/comment/:id
 // @desc     Comment on a post
 // @access   Private
+/**
+ * @swagger
+ * /posts/comment/{id}:
+ *   post:
+ *     tags:
+ *       - Posts
+ *     security:
+ *       - ApiKeyAuth: []
+ *     summary: comment post by id
+ *     description: comment the post by id.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Unique ID of the post.
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - text
+ *             properties:
+ *               text:
+ *                 text: string
+ *     responses:
+ *       200:
+ *         description: post commented.
+ *       500:
+ *         description: Server error.
+ */
 router.post(
   '/comment/:id',auth,
   checkObjectId('id'),

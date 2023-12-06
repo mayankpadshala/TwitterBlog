@@ -16,20 +16,6 @@ const Post = require('../../models/Post');
 // @route    GET api/profile/me
 // @desc     Get current users profile
 // @access   Private
-/**
- * @swagger
- * /profile/me:
- *   get:
- *     security:
- *       - BearerAuth: []
- *     summary: Get current user's profile
- *     description: Retrieve the profile of the current logged-in user.
- *     responses:
- *       200:
- *         description: Profile data of the current user.
- *       500:
- *         description: Server error.
- */
 router.get('/me' , async (req, res) => {
   try {
     const profile = await Profile.findOne({
@@ -51,36 +37,6 @@ router.get('/me' , async (req, res) => {
 // @route    POST api/profile
 // @desc     Create or update user profile
 // @access   Private
-/**
- * @swagger
- * /profile:
- *   post:
- *     security:
- *       - BearerAuth: []
- *     summary: Create or update user profile
- *     description: Create or update the profile of the logged-in user.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               twitter:
- *                 type: string
- *               linkedin:
- *                 type: string
- *               location:
- *                 type: string
- *    
- *     responses:
- *       200:
- *         description: Profile created or updated.
- *       400:
- *         description: Validation error.
- *       500:
- *         description: Server error.
- */
 router.post(
   '/',
   auth,
@@ -148,18 +104,6 @@ router.post(
 // @route    GET api/profile
 // @desc     Get all profiles
 // @access   Public
-/**
- * @swagger
- * /profile:
- *   get:
- *     summary: Get all profiles
- *     description: Retrieve all user profiles.
- *     responses:
- *       200:
- *         description: List of all user profiles.
- *       500:
- *         description: Server error.
- */
 router.get('/', async (req, res) => {
   try {
     const profiles = await Profile.find().populate('user', ['name', 'avatar']);
@@ -175,29 +119,6 @@ router.get('/', async (req, res) => {
 // @route    GET api/profile/user/:user_id
 // @desc     Get profile by user ID
 // @access   Public
-/**
- * @swagger
- * /profile/user/{user_id}:
- *   get:
- *     security:
- *       - BearerAuth: []
- *     summary: Get profile by user ID
- *     description: Retrieve a user's profile by their user ID.
- *     parameters:
- *       - in: path
- *         name: user_id
- *         required: true
- *         description: Unique ID of the user.
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Profile of the specified user.
- *       400:
- *         description: Profile not found.
- *       500:
- *         description: Server error.
- */
 router.get(
   '/user/:user_id',
   checkObjectId('user_id'),
@@ -225,8 +146,10 @@ router.get(
  * @swagger
  * /profile:
  *   delete:
+ *     tags: 
+ *       - Users
  *     security:
- *       - BearerAuth: []
+ *       - ApiKeyAuth: []
  *     summary: delete current user's profile
  *     description: delete the profile of the current logged-in user.
  *     responses:
@@ -235,7 +158,7 @@ router.get(
  *       500:
  *         description: Server error.
  */
-router.delete('/' , async (req, res) => {
+router.delete('/' ,auth, async (req, res) => {
   try {
     // Remove user posts
     // Remove profile
@@ -254,6 +177,29 @@ router.delete('/' , async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /profile/{id}:
+ *   delete:
+ *     tags: 
+ *       - Users
+ *     security:
+ *       - ApiKeyAuth: []
+ *     summary: delete user by id
+ *     description: delete the user by id.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Unique ID of the user.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: user deleted.
+ *       500:
+ *         description: Server error.
+ */
 router.delete('/:id' , async (req, res) => {
   try {
     // Remove user posts
