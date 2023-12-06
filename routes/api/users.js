@@ -242,7 +242,7 @@ router.get('/',auth , async (req, res) => {
 router.post('/profile', auth ,
   async (req, res) => {
     
-
+    console.log("user"+JSON.stringify(req.user));
     // destructure the request
     const {
       website,
@@ -329,7 +329,7 @@ router.put('/unfollow/:id' ,auth , checkObjectId('id'), async (req, res) => {
     const userid = await User.findById(req.user._id);
 
     Unfollowprofile.followers = Unfollowprofile.followers.filter(
-      ({ user }) => user.toString() !== req.user._id
+      ({ user }) => user.toString() !== req.user._id.toString()
     );
     // remove following
     userid.following = userid.following.filter(
