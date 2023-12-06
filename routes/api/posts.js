@@ -93,6 +93,7 @@ router.get('/',auth, async (req, res) => {
             const followingUser = user.following;
             const posts = await Post.find().sort({ date: -1 }).populate('likes')
                                                               .populate('comments');
+
             let filteredPosts = [];
             if(followingUser.length > 0){
               const followingUserIds = followingUser.map(fu => fu.user);

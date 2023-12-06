@@ -28,7 +28,6 @@ const Profile = ({ getProfileById,twoFAEnable, settwoFA, deleteAccount, profile:
       setShowTwoFAForm(false);
     }
   }, [profile]);
-  console.log(auth)
   return (
     <section className="container">
       {profile === null ? (

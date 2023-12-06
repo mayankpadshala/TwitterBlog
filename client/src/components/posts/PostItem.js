@@ -11,8 +11,7 @@ const PostItem = ({
   deletePost,
   auth,
   post: { _id, text, name, avatar, user, likes, comments, date }
-}) => { 
-  console.log(auth);
+}) => {
 return(
   <div className="post bg-white p-1 my-1">
     <div>

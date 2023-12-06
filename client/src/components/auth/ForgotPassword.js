@@ -9,8 +9,6 @@ const ForgotPassword = ({ sendPasswordResetEmail }) => {
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState(Math.floor(100000 + Math.random() * 900000));
   const [writecode, setcode] = useState('');
-
-  console.log("otp==>"+otp);
   const onChange = (e) => setEmail(e.target.value);
   const onChange2 = (e) => setcode(e.target.value);
 

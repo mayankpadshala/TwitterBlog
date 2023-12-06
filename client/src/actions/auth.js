@@ -24,7 +24,6 @@ export const loadUser = () => async (dispatch) => {
     //const res = await api.get('/auth');
     axios.get("http://localhost:5000/getuser", { withCredentials: true }).then((res) => {
              if (res.data) {
-              //console.log(JSON.stringify(res.data))
               dispatch({
                 type: USER_LOADED,
                 payload: res.data

@@ -23,7 +23,6 @@ import {
 export const getCurrentProfile = () => async (dispatch) => {
   try {
     const res = await api.get('/users/me');
-    console.log(res.data)
     dispatch({
       type: GET_PROFILE,
       payload: res.data
@@ -75,7 +74,6 @@ export const getProfileById = (userId) => async (dispatch) => {
 export const twoFAEnable = () => async (dispatch) => {
   try {
     const res = await api.get(`/qrImage`);
-    console.log("qrimage"+JSON.stringify(res.data))
     dispatch({
       type: GET_PROFILE,
       payload: res.data
@@ -146,8 +144,6 @@ export const createProfile =
       
       //   res.data.src = dataUrl
       // }
-      
-     console.log("res==>"+res.data)
       dispatch({
         type: GET_PROFILE,
         payload: res.data
