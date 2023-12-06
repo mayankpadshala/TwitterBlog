@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { setAlert } from '../../actions/alert';
 import { register } from '../../actions/auth';
 import PropTypes from 'prop-types';
@@ -12,7 +12,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
     password: '',
     password2: ''
   });
-
+  const navigate = useNavigate();
   const { name, email, password, password2 } = formData;
 
   const onChange = (e) =>
@@ -23,12 +23,15 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
     if (password !== password2) {
       setAlert('Passwords do not match', 'danger');
     } else {
-      register({ name, email, password });
+      register({ name, email, password }).then(() => {
+        navigate(`/login`);
+      });
+      
     }
   };
 
   if (isAuthenticated) {
-    return <Navigate to="/profiles" />;
+    //return <Navigate to="/profiles" />;
   }
 
   return (

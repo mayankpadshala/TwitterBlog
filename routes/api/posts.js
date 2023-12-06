@@ -36,9 +36,9 @@ router.post('/', auth,
       });
 
       const post = await newPost.save();
-      redisClient.setEx(redisKey, 300, JSON.stringify(newPost)).catch(err => {
+      redisClient.setEx(redisKey, 100, JSON.stringify(newPost)).catch(err => {
         console.error('Error caching posts in Redis:', err);
-    });
+      });
       logger.info('post posts');
       res.json(post);
     } catch (err) {
@@ -93,12 +93,16 @@ router.get('/',auth, async (req, res) => {
             const followingUser = user.following;
             const posts = await Post.find().sort({ date: -1 }).populate('likes')
                                                               .populate('comments');
+
+            let filteredPosts = [];
             if(followingUser.length > 0){
               const followingUserIds = followingUser.map(fu => fu.user);
-              const filteredPosts = posts.filter(post => followingUserIds.includes(post.user));
+              console.log(followingUserIds)
+              followingUserIds.push(req.user._id);
+              filteredPosts = posts.filter(post => followingUserIds.includes(post.user));
 
               // Cache the posts in Redis with a TTL (e.g., 1 hour = 3600 seconds)
-              await redisClient.setEx(redisKey, 3600, JSON.stringify(posts));
+              await redisClient.setEx(redisKey, 100, JSON.stringify(posts));
 
               res.json(filteredPosts);
             }

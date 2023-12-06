@@ -50,7 +50,7 @@ export const register = (formData) => async (dispatch) => {
       type: REGISTER_SUCCESS,
       payload: res.data
     });
-    dispatch(loadUser());
+    //dispatch(loadUser());
   } catch (err) {
     const errors = err.response.data.errors;
 
