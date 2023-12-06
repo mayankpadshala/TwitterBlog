@@ -71,8 +71,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser((id, done) => {
   User.findById(id, (err, doc) => {
-    //console.log("in deser==>"+doc)
-    return done(null, doc);
+        return done(null, doc);
   })
 })
 
@@ -88,14 +87,12 @@ passport.use(new GoogleStrategy({
         return done(err, null);
       }
       if (!doc) {
-        console.log(profile);
         const newUser = new User({
           googleId: profile.id,
           role:"user",
           name: profile.displayName,
           avatar: "https://www.shutterstock.com/image-vector/user-icon-trendy-flat-style-600nw-1467725033.jpg"
         });
-        //console.log("p==>"+JSON.stringify(profile));
         await newUser.save();
         return done(null, newUser);
       }
@@ -191,7 +188,6 @@ app.get('/auth/github/callback',
   });
 
 app.get("/getuser", (req, res) => {
-  //console.log("getuserData"+JSON.stringify(req.user));
   res.send(req.user);
 })
 
@@ -214,9 +210,6 @@ app.get("/auth/logout", (req, res) => {
 // generater QR Image
 app.get("/api/qrImage",auth, async (req, res) => {
   try {
-    //console.log("reqUserIdtrace:", req.user._id);
-    //const { id } = req.cookies;
-    //console.log("idtrace:", id);
     const user = await User.findById(req.user._id);
     const secret = authenticator.generateSecret();
     const uri = authenticator.keyuri(user._id, "Micrblab", secret);
@@ -237,10 +230,7 @@ app.get("/api/qrImage",auth, async (req, res) => {
 // set the 2 FA
 app.put("/api/set2FA", auth, async (req, res) => {
   try {
-    //const { id } = req.cookies;
-    //const { code } = req.query;
     const user = await User.findById(req.user._id);
-    console.log("user==>"+JSON.stringify(user))
     const tempSecret= user["twoFA"].tempSecret;
     const { code } = req.body;
     const verified = authenticator.check(code, tempSecret);

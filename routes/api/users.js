@@ -125,7 +125,6 @@ router.post('/',
       //   console.error(err.message);
       //   return res.status(500).send('Server Error');
       // }
-      console.log(user)
       jwt.sign(
         payload,
         config.get('jwtSecret'),
@@ -286,7 +285,6 @@ router.post('/profile', auth ,
       // );
       await User.updateOne(filter, update);
       const profile = await User.findById(req.user._id);
-      console.log("id==>"+req.user._id);
       logger.info('post profile');
       return res.json(profile);
     } catch (err) {
@@ -394,7 +392,6 @@ function sendEmail({ recipient_email, OTP }) {
                 };
     transporter.sendMail(mail_configs, function (error, info) {
       if (error) {
-        console.log(error);
         return reject({ message: `An error has occured` });
       }
       return resolve({ message: "Email sent succesfuly" });

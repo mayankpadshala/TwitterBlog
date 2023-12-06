@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import { logout } from '../../actions/auth';
 
 const Navbar = ({ auth, logout }) => {
-  //console.log("auth==>"+JSON.stringify(auth))
   return (
     <nav className="navbar bg-dark">
       <h1>

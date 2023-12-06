@@ -39,7 +39,6 @@ function authReducer(state = initialState, action) {
     case ACCOUNT_DELETED:
     case AUTH_ERROR:
     case LOGOUT:
-      console.log("cookie, token removed");
       Cookie.remove('jwt');
       Cookie.remove('connect.sid');
       return {

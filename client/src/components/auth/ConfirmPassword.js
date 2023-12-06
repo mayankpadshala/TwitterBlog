@@ -10,7 +10,6 @@ const ConfirmPassword = ({ newPassword,  isAuthenticated}) => {
   const email = location.state?.email;
   const [password, setpassword] = useState('');
   const [cpassword, setcpassword] = useState('');
-    console.log(email);
 
   const onChange = (e) => setpassword(e.target.value);
   const onChange2 = (e) => setcpassword(e.target.value);
