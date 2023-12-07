@@ -1,4 +1,5 @@
 const express = require('express');
+require('dotenv').config();
 const connectDB = require('./config/db');
 const path = require('path');
 const cookieParser = require('cookie-parser');
@@ -18,9 +19,16 @@ const app = express();
 const qrcode = require("qrcode");
 const { authenticator } = require("otplib");
 const auth = require('./middleware/auth');
+const UIUrl = process.env.UIUrl || 'http://localhost:3000';
+const googleclientID = process.env.GoogleClientId;
+const googleclientSecret = process.env.GoogleClientSecret;
+const TwitterconsumerKey = process.env.TwitterconsumerKey || config.TwitterconsumerKey;
+const TwitterconsumerSecret = process.env.TwitterconsumerSecret || config.TwitterconsumerSecret;
+const GitHubclientID = process.env.GitHubclientID || config.GitHubclientID;
+const GitHubclientSecret = process.env.GitHubclientSecret || config.GitHubclientSecret;
+
 // Connect Database
 connectDB();
-
 // const redisClient = redis.createClient({
 //     host: 'localhost', // or your Redis server host
 //     port: 6379 // default Redis port
@@ -37,7 +45,7 @@ connectDB();
 // app.use(cookieParser());
 
 app.use(express.json());
-app.use(cors({ origin: `${config.UIUrl}`, credentials: true, "Access-Control-Allow-Origin": `${config.UIUrl}` }));
+app.use(cors({ origin: `${UIUrl}`, credentials: true}));
 
 // Define Routes
 
@@ -78,8 +86,8 @@ passport.deserializeUser((id, done) => {
 
 
 passport.use(new GoogleStrategy({
-  clientID: config.GoogleClientId,
-  clientSecret: config.GoogleClientSecret,
+  clientID: process.env.GoogleClientId,
+  clientSecret: process.env.GoogleClientSecret,
   callbackURL: "/auth/google/callback"
 },
   function (request, accessToken, refreshToken, profile, done) {
@@ -103,8 +111,8 @@ passport.use(new GoogleStrategy({
   }));
 
 passport.use(new TwitterStrategy({
-  consumerKey: config.TwitterconsumerKey,
-  consumerSecret: config.TwitterconsumerSecret,
+  consumerKey: TwitterconsumerKey,
+  consumerSecret: TwitterconsumerSecret,
   callbackURL: "/auth/twitter/callback"
 },
 function (request, accessToken, refreshToken, profile, done) {
@@ -136,8 +144,8 @@ function (request, accessToken, refreshToken, profile, done) {
 ));
 
 passport.use(new GitHubStrategy({
-  clientID: config.GitHubclientID,
-  clientSecret: config.GitHubclientSecret,
+  clientID: GitHubclientID,
+  clientSecret: GitHubclientSecret,
   callbackURL: "/auth/github/callback"
 },
 function (request, accessToken, refreshToken, profile, done) {
@@ -165,27 +173,27 @@ function (request, accessToken, refreshToken, profile, done) {
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }));
 
 app.get('/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: `${config.UIUrl}/login`, session: true }),
+  passport.authenticate('google', { failureRedirect: `${UIUrl}/login`, session: true }),
   function (req, res) {
-    res.redirect(`${config.UIUrl}/posts`);
+    res.redirect(`${UIUrl}/posts`);
   });
 
 
 app.get('/auth/twitter', passport.authenticate('twitter'));
 
 app.get('/auth/twitter/callback',
-  passport.authenticate('twitter', { failureRedirect: `${config.UIUrl}/login`, session: true }),
+  passport.authenticate('twitter', { failureRedirect: `${UIUrl}/login`, session: true }),
   function (req, res) {
-    res.redirect(`${config.UIUrl}/posts`);
+    res.redirect(`${UIUrl}/posts`);
   });
 
 
 app.get('/auth/github', passport.authenticate('github'));
 
 app.get('/auth/github/callback',
-  passport.authenticate('github', { failureRedirect: `${config.UIUrl}/login`, session: true }),
+  passport.authenticate('github', { failureRedirect: `${UIUrl}/login`, session: true }),
   function (req, res) {
-    res.redirect(`${config.UIUrl}/posts`);
+    res.redirect(`${UIUrl}/posts`);
   });
 
 app.get("/getuser", (req, res) => {
@@ -200,11 +208,11 @@ app.get("/auth/logout", (req, res) => {
         return next(err); 
       }
       req.session.destroy();
-      res.redirect(`${config.UIUrl}/`);
+      res.redirect(`${UIUrl}/`);
     });
   } else {
     // Handle the case where there is no user to log out
-    res.redirect(`${config.UIUrl}/`);
+    res.redirect(`${UIUrl}/`);
   }
 })
 

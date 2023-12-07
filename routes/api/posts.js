@@ -9,10 +9,15 @@ const User = require('../../models/User');
 const checkObjectId = require('../../middleware/checkObjectId');
 const { createClient } = require('redis');
 const passport = require('passport');
+// const redisClient = createClient({
+//   url: process.env.REDIS_URL || 'redis://localhost:6379'
+// });
 const redisClient = createClient({
-  url: process.env.REDIS_URL || 'redis://localhost:6379' // Replace with your Redis server's URL
-  // host: process.env.REDIS_HOST || '127.0.0.1',
-  // port: process.env.REDIS_PORT || 6379
+  password: process.env.RedisPW,
+  socket: {
+      host: 'redis-18209.c267.us-east-1-4.ec2.cloud.redislabs.com',
+      port: 18209
+  }
 });
 redisClient.connect().catch(console.error);
 
