@@ -12,7 +12,6 @@ const passport =require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const TwitterStrategy = require('passport-twitter').Strategy;
 const GitHubStrategy = require('passport-github').Strategy;
-const config = require('./config/default.json');
 const cors = require('cors');
 const User = require('./models/User');
 const app = express();
@@ -22,10 +21,10 @@ const auth = require('./middleware/auth');
 const UIUrl = process.env.UIUrl || 'http://localhost:3000';
 const googleclientID = process.env.GoogleClientId;
 const googleclientSecret = process.env.GoogleClientSecret;
-const TwitterconsumerKey = process.env.TwitterconsumerKey || config.TwitterconsumerKey;
-const TwitterconsumerSecret = process.env.TwitterconsumerSecret || config.TwitterconsumerSecret;
-const GitHubclientID = process.env.GitHubclientID || config.GitHubclientID;
-const GitHubclientSecret = process.env.GitHubclientSecret || config.GitHubclientSecret;
+const TwitterconsumerKey = process.env.TwitterconsumerKey;
+const TwitterconsumerSecret = process.env.TwitterconsumerSecret;
+const GitHubclientID = process.env.GitHubclientID;
+const GitHubclientSecret = process.env.GitHubclientSecret;
 
 // Connect Database
 connectDB();
