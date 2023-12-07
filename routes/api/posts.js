@@ -72,7 +72,7 @@ router.post('/', auth,
       });
 
       const post = await newPost.save();
-      redisClient.setEx(redisKey, 100, JSON.stringify(newPost)).catch(err => {
+      redisClient.setEx(redisKey, 300, JSON.stringify(newPost)).catch(err => {
         console.error('Error caching posts in Redis:', err);
       });
       logger.info('post posts');
@@ -118,9 +118,18 @@ router.get('/',auth, async (req, res) => {
     else{
         
         const cachedPosts = await redisClient.get(redisKey);
-        console.log(cachedPosts);
         if (cachedPosts) {
-            return res.json(JSON.parse(cachedPosts));
+          const parsedData = JSON.parse(cachedPosts);
+
+          if (Array.isArray(parsedData)) {
+            return res.json(parsedData);
+          } else {
+            console.log("It's an object.");
+            let cachedArr = []
+            cachedArr.push(JSON.parse(cachedPosts))
+            return res.json(cachedArr);
+          }
+          
         } else {
             const user = await User.findById(req.user._id);
             const followingUser = user.following;
@@ -133,7 +142,7 @@ router.get('/',auth, async (req, res) => {
               filteredPosts = posts.filter(post => followingUserIds.includes(post.user));
 
               // Cache the posts in Redis with a TTL (e.g., 1 hour = 3600 seconds)
-              await redisClient.setEx(redisKey, 100, JSON.stringify(posts));
+              await redisClient.setEx(redisKey, 300, JSON.stringify(posts));
 
               res.json(filteredPosts);
             }else{
