@@ -10,7 +10,7 @@ const PostItem = ({
   removeLike,
   deletePost,
   auth,
-  post: { _id, text, name, avatar, user, likes, comments, date }
+  post: { _id, text, name, avatar, user, date, likesCount, commentsCount }
 }) => {
 return(
   <div className="post bg-white p-1 my-1">
@@ -30,7 +30,7 @@ return(
         className="btn btn-light"
       >
         <i className="fas fa-thumbs-up" />{' '}
-        <span>{likes.length > 0 && <span>{likes.length}</span>}</span>
+        {likesCount > 0 && ( <span>{likesCount}</span> )}
       </button>
       <button
         onClick={() => removeLike(_id)}
@@ -41,8 +41,8 @@ return(
       </button>
       <Link to={`/posts/${_id}`} className="btn btn-primary">
         Discussion{' '}
-        {comments.length > 0 && (
-          <span className="comment-count">{comments.length}</span>
+        {commentsCount > 0 && (
+          <span className="comment-count">{commentsCount}</span>
         )}
       </Link>
       {!auth.loading && (user === auth.user._id || auth.user.role === 'admin') && (

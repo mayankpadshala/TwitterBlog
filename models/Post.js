@@ -25,6 +25,9 @@ const PostSchema = new Schema({
       }
     }
   ],
+  likesCount: {
+    type: Number
+  },
   comments: [
     {
       user: {
@@ -46,6 +49,9 @@ const PostSchema = new Schema({
       }
     }
   ],
+  commentsCount: {
+    type: Number
+  },
   date: {
     type: Date,
     default: Date.now

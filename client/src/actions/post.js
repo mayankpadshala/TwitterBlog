@@ -56,10 +56,10 @@ export const getPostsById = (userid) => async (dispatch) => {
 export const addLike = (id) => async (dispatch) => {
   try {
     const res = await api.put(`/posts/like/${id}`);
-
+    
     dispatch({
       type: UPDATE_LIKES,
-      payload: { id, likes: res.data }
+      payload: { id, likesCount: res.data }
     });
   } catch (err) {
     dispatch({
@@ -76,7 +76,7 @@ export const removeLike = (id) => async (dispatch) => {
 
     dispatch({
       type: UPDATE_LIKES,
-      payload: { id, likes: res.data }
+      payload: { id, likesCount: res.data }
     });
   } catch (err) {
     dispatch({
@@ -117,6 +117,7 @@ export const addPost = (formData) => async (dispatch) => {
 
     dispatch(setAlert('Post Created', 'success'));
   } catch (err) {
+    console.log(err);
     dispatch({
       type: POST_ERROR,
       payload: { msg: err.response.statusText, status: err.response.status }

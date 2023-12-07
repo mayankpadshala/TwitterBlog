@@ -66,7 +66,9 @@ router.post('/', auth,
         text: req.body.text,
         name: user.name,
         avatar: user.avatar,
-        user: req.user._id
+        user: req.user._id,
+        likesCount: 0,
+        commentsCount: 0
       });
 
       const post = await newPost.save();
@@ -110,40 +112,32 @@ router.get('/',auth, async (req, res) => {
     const user = await User.findById(req.user._id);
     
     if(user.role == "admin"){
-      
-      const cachedPosts = await redisClient.get(redisKey);
-      if (cachedPosts) {
-          return res.json(JSON.parse(cachedPosts));
-      } else {
-          const posts = await Post.find().sort({ date: -1 });
-          res.json(posts);
-      }
+      const posts = await Post.find().sort({ date: -1 });
+      res.json(posts);
     }
     else{
         
         const cachedPosts = await redisClient.get(redisKey);
+        console.log(cachedPosts);
         if (cachedPosts) {
             return res.json(JSON.parse(cachedPosts));
         } else {
             const user = await User.findById(req.user._id);
             const followingUser = user.following;
-            const posts = await Post.find().sort({ date: -1 }).populate('likes')
-                                                              .populate('comments');
+            const posts = await Post.find().sort({ date: -1 });
 
             let filteredPosts = [];
-            if(followingUser.length > 0){
-              const followingUserIds = followingUser.map(fu => fu.user);
-              console.log(followingUserIds)
-              followingUserIds.push(req.user._id);
+            const followingUserIds = followingUser.map(fu => fu.user);
+            followingUserIds.push(req.user._id);
+            if(followingUserIds.length > 0){
               filteredPosts = posts.filter(post => followingUserIds.includes(post.user));
 
               // Cache the posts in Redis with a TTL (e.g., 1 hour = 3600 seconds)
               await redisClient.setEx(redisKey, 100, JSON.stringify(posts));
 
               res.json(filteredPosts);
-            }
-            else{
-              res.json({});
+            }else{
+              res.json(filteredPosts);
             }
         }
       }
@@ -300,11 +294,13 @@ router.put('/like/:id',auth, checkObjectId('id'), async (req, res) => {
       return res.status(400).json({ msg: 'Post already liked' });
     }
 
+    post.likesCount = post.likesCount + 1;
+
     post.likes.unshift({ user: req.user._id });
 
     await post.save();
     logger.info('put like');
-    return res.json(post.likes);
+    return res.json(post.likesCount);
   } catch (err) {
     console.error(err.message);
     logger.error('put like-err'+err.message);
@@ -351,10 +347,11 @@ router.put('/unlike/:id',auth, checkObjectId('id'), async (req, res) => {
     post.likes = post.likes.filter(
       ({ user }) => user.toString() !== req.user._id.toString()
     );
+    post.likesCount = post.likesCount - 1;
 
     await post.save();
     logger.info('put unlike');
-    return res.json(post.likes);
+    return res.json(post.likesCount);
   } catch (err) {
     console.error(err.message);
     logger.error('put unlike-err'+err.message);
@@ -421,7 +418,7 @@ router.post(
       };
 
       post.comments.unshift(newComment);
-
+      post.commentsCount = post.commentsCount + 1;
       await post.save();
       logger.info('post comment');
       res.json(post.comments);
@@ -449,14 +446,14 @@ router.delete('/comment/:id/:comment_id',auth, async (req, res) => {
       return res.status(404).json({ msg: 'Comment does not exist' });
     }
     // Check user
-    if (comment.user.toString() !== req.user._id) {
+    if (comment.user.toString() !== req.user._id.toString()) {
       return res.status(401).json({ msg: 'User not authorized' });
     }
 
     post.comments = post.comments.filter(
       ({ id }) => id !== req.params.comment_id
     );
-
+    post.commentsCount = post.commentsCount - 1;
     await post.save();
     logger.info('delete comment');
     return res.json(post.comments);
