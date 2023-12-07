@@ -7,10 +7,10 @@
     "start": "cross-env NODE_OPTIONS=--openssl-legacy-provider node server",
     "server": "cross-env NODE_OPTIONS=--openssl-legacy-provider nodemon server",
     "client": "npm start --prefix client",
-    "dev": "concurrently \"npm run server\" \"node queueProcessor.js\" \"npm run client\"",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client",
     "env": "echo $NODE_OPTIONS",
-    "build": "npm run build --prefix client"
+    "build": "npm install && npm install --prefix client && npm run build --prefix client"
   },
   "author": "MicroBlabers",
   "license": "MIT",
