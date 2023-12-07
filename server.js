@@ -100,6 +100,7 @@ passport.use(new GoogleStrategy({
           googleId: profile.id,
           role:"user",
           name: profile.displayName,
+          email: profile.id + "@gmail.com",
           avatar: "https://www.shutterstock.com/image-vector/user-icon-trendy-flat-style-600nw-1467725033.jpg"
         });
         await newUser.save();
@@ -131,6 +132,7 @@ function (request, accessToken, refreshToken, profile, done) {
           twitterId: profile.id,
           role:"user",
           name: profile.displayName,
+          email: profile.id + "@gmail.com",
           avatar: "https://www.shutterstock.com/image-vector/user-icon-trendy-flat-style-600nw-1467725033.jpg"
         });
 
@@ -159,6 +161,7 @@ function (request, accessToken, refreshToken, profile, done) {
           githubId: profile.id,
           role: "user",
           name: profile.displayName,
+          email: profile.id + "@gmail.com",
           avatar: "https://www.shutterstock.com/image-vector/user-icon-trendy-flat-style-600nw-1467725033.jpg"
         });
         await newUser.save();

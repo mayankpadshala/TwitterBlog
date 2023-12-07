@@ -22,7 +22,7 @@ import {
 export const loadUser = () => async (dispatch) => {
   try {
     //const res = await api.get('/auth');
-    axios.get("http://localhost:5000/getuser", { withCredentials: true }).then((res) => {
+    axios.get(`${process.env.REACT_APP_SERVER_URL}/getuser`, { withCredentials: true }).then((res) => {
              if (res.data) {
               dispatch({
                 type: USER_LOADED,
@@ -98,7 +98,7 @@ export const login = (email, password, code, on2FARequested) => async (dispatch)
 // Logout
 export const logout = () => async (dispatch) => {
   try {
-    axios.get("http://localhost:5000/auth/logout", { withCredentials: true }).then((res) => {
+    axios.get(`${process.env.REACT_APP_SERVER_URL}/auth/logout`, { withCredentials: true }).then((res) => {
              
         })
         dispatch({

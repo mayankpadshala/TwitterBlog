@@ -13,16 +13,17 @@ const Login = ({ login, isAuthenticated }) => {
     password: '', code:''
   });
   const googleLogin = () => {
-    window.open("http://localhost:5000/auth/google", "_self");
+    window.open(`${process.env.REACT_APP_SERVER_URL}/auth/google`, "_self");
   }
 
   const githubLogin = () => {
-      window.open("http://localhost:5000/auth/github", "_self");
+      window.open(`${process.env.REACT_APP_SERVER_URL}/auth/github`, "_self");
   }
 
   const twitterLogin = () => {
-      window.location.href = "http://localhost:5000/auth/twitter"
+    window.open(`${process.env.REACT_APP_SERVER_URL}/auth/twitter`, "_self");
   }
+  
   const [show2FAInput, setShow2FAInput] = useState(false);
 
   const { email, password, code } = formData;
